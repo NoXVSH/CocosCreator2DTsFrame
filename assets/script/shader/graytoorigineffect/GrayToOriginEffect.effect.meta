@@ -1,0 +1,11 @@
+{
+  "ver": "1.0.15",
+  "uuid": "1c3dbdd7-c92f-46b9-aad1-523f8143f439",
+  "compiledShaders": [
+    {
+      "vert": "\n#define _IS_VERT_SHADER 1\n\nprecision lowp float;\n\nuniform mat4 cc_matViewProj;\n\n#if _USE_MODEL\n  uniform mat4 cc_matWorld;\n#endif\n\nattribute vec3 a_position;\nattribute lowp vec4 a_color;\n\n#if USE_TEXTURE\n  attribute mediump vec2 a_uv0;\n  varying mediump vec2 v_uv0;\n#endif\n\nvarying lowp vec4 v_color;\n\nvoid main () {\n  mat4 mvp;\n  \n  #if _USE_MODEL\n    mvp = cc_matViewProj * cc_matWorld;\n  #else\n    mvp = cc_matViewProj;\n  #endif\n\n  #if USE_TEXTURE\n    v_uv0 = a_uv0;\n  #endif\n\n  v_color = a_color;\n\n  gl_Position = mvp * vec4(a_position, 1);\n}\n\n\n",
+      "frag": "\n#define _IS_FRAG_SHADER 1\n\nprecision highp float;\n\n#if USE_TEXTURE\n  uniform sampler2D texture;\n  varying mediump vec2 v_uv0;\n#endif\n\nvarying lowp vec4 v_color;\nuniform float time;\nuniform float duration;\n\n#if USE_ALPHA_TEST\n  uniform float alphaThreshold;\n#endif\n\nvoid ALPHA_TEST (in vec4 color) {\n  #if USE_ALPHA_TEST\n      if (color.a < alphaThreshold) discard;\n  #endif\n}\n\nvoid ALPHA_TEST (in float alpha) {\n  #if USE_ALPHA_TEST\n      if (alpha < alphaThreshold) discard;\n  #endif\n}\n\nvoid main () {\n  vec4 mainColor = v_color;\n\n  #if USE_TEXTURE\n    mainColor *= texture2D(texture, v_uv0);\n    #if _USE_ETC1_TEXTURE\n      mainColor.a *= texture2D(texture, v_uv0 + vec2(0, 0.5)).r;\n    #endif\n  #endif\n\n  float gray = 0.2126 * mainColor.r + 0.7152 * mainColor.g + 0.0722 * mainColor.b;\n  vec4 grayColor = vec4(gray, gray, gray, mainColor.a);\n\n  float rate;\n\n  if(time >= duration) rate = 1.0;\n  else {\n    rate = time / duration;\n  }\n\n  vec4 finalColor = mix(grayColor, mainColor, rate); \n  ALPHA_TEST(finalColor);\n  gl_FragColor = finalColor;\n\n}\n\n\n"
+    }
+  ],
+  "subMetas": {}
+}

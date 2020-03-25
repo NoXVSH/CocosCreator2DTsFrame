@@ -1,0 +1,1 @@
+<script type="text/javascript" src="https://jsapi.qq.com/get?api=x5gameplayer.*"> </script>

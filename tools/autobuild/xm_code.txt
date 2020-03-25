@@ -1,0 +1,1 @@
+<script type="text/javascript" defer="defer" src="https://static.g.mi.com/game/h5sdk/h5-wy-sdk-v.1.0.min.js"> </script>

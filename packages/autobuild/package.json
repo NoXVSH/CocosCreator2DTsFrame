@@ -1,0 +1,7 @@
+{
+  "name": "autobuild",
+  "version": "0.0.1",
+  "description": "png compression and file compare",
+  "author": "NoXVSH",
+  "main": "main.js"
+}

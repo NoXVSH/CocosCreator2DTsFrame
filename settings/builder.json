@@ -1,0 +1,51 @@
+{
+  "android-instant": {
+    "REMOTE_SERVER_ROOT": "http://10.1.1.99:7456/preview-android-instant/",
+    "host": "",
+    "pathPattern": "",
+    "recordPath": "",
+    "scheme": "https",
+    "skipRecord": false
+  },
+  "appBundle": false,
+  "baidugame": {
+    "REMOTE_SERVER_ROOT": "https://wx-dream.sihai-inc.com/OLfeiDao/baidu/",
+    "appid": "16264305",
+    "orientation": "portrait",
+    "subContext": ""
+  },
+  "encryptJs": true,
+  "excludeScenes": [
+    "44161c70-5dfa-49ff-bf87-d49bc16843e5"
+  ],
+  "fb-instant-games": {},
+  "includeSDKBox": false,
+  "inlineSpriteFrames": true,
+  "inlineSpriteFrames_native": false,
+  "md5Cache": true,
+  "mergeStartScene": true,
+  "optimizeHotUpdate": true,
+  "orientation": {
+    "landscapeLeft": false,
+    "landscapeRight": false,
+    "portrait": true,
+    "upsideDown": false
+  },
+  "packageName": "org.cocos2d.idiomtown",
+  "qqplay": {
+    "REMOTE_SERVER_ROOT": "",
+    "orientation": "portrait",
+    "zip": false
+  },
+  "startScene": "ec35a411-4a75-4fd9-90fb-9116b0c82f87",
+  "title": "IdiomTown",
+  "webOrientation": "portrait",
+  "wechatgame": {
+    "REMOTE_SERVER_ROOT": "https://wx-dream.sihai-inc.com/idiomTown",
+    "appid": "wx337d8d587b7a8c64",
+    "orientation": "portrait",
+    "subContext": "wx-open-data-project"
+  },
+  "xxteaKey": "996d0505-7542-42",
+  "zipCompressJs": true
+}
