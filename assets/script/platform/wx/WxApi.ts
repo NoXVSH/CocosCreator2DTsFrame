@@ -88,16 +88,7 @@ export default class WxApi extends BasePlatformApi {
 
             wx.onHide(function (res) {
                 log("微信后台化回调：", res);
-                cc.audioEngine.stopAll();//有时候后台切回微信 莫名其妙会播放音效, 此处调用下关闭音效
                 EventManager.Instance.emit(EventType.GameOnHide);
-            });
-
-            wx.onAudioInterruptionEnd(function () {
-                //强行暂停音乐 如果不暂停，调用resumeMusic是无效的，因为是微信让声音消失了, 而引擎底层不知道
-                cc.audioEngine.pauseMusic();
-                //恢复音乐播放，比如调用 
-                cc.audioEngine.resumeMusic();
-                log("平台音乐中止结束回调");
             });
 
             wx.onMemoryWarning(() => {
