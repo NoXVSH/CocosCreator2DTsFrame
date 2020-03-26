@@ -1,7 +1,0 @@
-{
-  "name": "separate_engine",
-  "version": "0.0.1",
-  "description": "微信小游戏引擎分离旧版本兼容插件",
-  "author": "Cocos Creator",
-  "main": "main.js"
-}

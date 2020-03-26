@@ -11,22 +11,12 @@ var beforeBuildFinishCallBack = null;
 
 let unCompressArray = [ //这边type 一律都是sprite-frame
   ['db://assets/source/texture/background/**/*', 'sprite-frame'],  
-  ['db://assets/source/texture/special/**/*', 'sprite-frame'],  
-  ['db://assets/source_remote/texture/background/**/*', 'sprite-frame'],  
-  ['db://assets/source_remote/texture/special/**/*', 'sprite-frame'],  
-  ['db://assets/resources/texture/unit/**/*', 'sprite-frame'], 
+  ['db://assets/source_remote/texture/background/**/*', 'sprite-frame'],   
 ];
 
 let moveToOutArray = [
-  ['db://assets/source/texture/out/**/*'], 
-  ['db://assets/resources/texture/unit/**/*'], 
-  ['db://assets/resources/mp3/out/*'],  
-  ['db://assets/resources/config/out/**/*'],  
-  ['db://assets/source_remote/texture/**/*'],  
-  ['db://assets/resources/fnt/out/**/*'], 
-  ['db://assets/resources/texture/chapter/**/*'], 
-  ['db://assets/resources/texture/build/**/*'], 
-  ['db://assets/resources/prefab_remote/**/*'], 
+  ['db://assets/source_remote/**/*'], 
+  ['db://assets/resources/remote/**/*'], 
 ];
 
 function onBuildStart(options, callback) {
@@ -48,6 +38,11 @@ function onBuildStart(options, callback) {
 }
 
 function onBeforeBuildFinish(options, callback) {
+  if(options.buildScriptsOnly) {
+      callback();
+      return;
+  }
+
   let buildResults = options.buildResults;
 
   for (let i = 0, len = unCompressArray.length; i < len; i++) {
@@ -149,7 +144,7 @@ function buildFinished(options, callback) {
   buildPath = Editor.Project.path + path.sep + "build" + path.sep + platform;
   Editor.log("当前平台++++  " + buildPath);
 
-  if (platform != "web-mobile") {
+  if (platform != "web-mobile" && !options.buildScriptsOnly) {
     startCopyOutRes();
   }
   else Editor.log("不进行资源分离!!!");
@@ -324,8 +319,6 @@ function createCompressThread(list, startIndex, endIndex, i) {
       } else {
         completeCount++;
         Editor.success(i + "号线程完成压缩");
-        Editor.success(completeCount);
-        Editor.success(threadCount);
         if (completeCount == threadCount) {
           Editor.success("压缩数量 " + count);
           Editor.success("压缩图集 finished!");
