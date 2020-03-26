@@ -31,7 +31,7 @@ export default class MyGlobal {
     }
 
     public name : string = "MyGlobal";
-    public Version : string = "1.1.2";
+    public Version : string = "1.0.0";
     public gameId : number = 190;
     public isLogin : boolean = false;
     public loginTime : number = 0;

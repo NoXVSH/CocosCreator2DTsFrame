@@ -20,8 +20,8 @@ export default class MatrixHitTest extends cc.Component {
             return false;
         }
 
-        let buildCamera : cc.Camera = ModuleManager.Instance.Build.dispatchGet("getBuildCamera");
-        location = buildCamera.getScreenToWorldPoint(location);
+        let camera : cc.Camera = cc.Camera.main;
+        location = camera.getScreenToWorldPoint(location);
 
         let posInNode = this.node.convertToNodeSpaceAR(location);
         let rect = spriteFrame.getRect();

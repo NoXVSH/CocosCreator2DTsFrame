@@ -24,7 +24,6 @@ export default class DynamicEffectNode extends cc.Component {
     }
 
     addEvent() : void {
-        // ModuleManager.Instance.Game.on("gameFinish", this.recycle, this);
         this.node.on("recycle", this.recycle, this);
     }
 
@@ -58,8 +57,6 @@ export default class DynamicEffectNode extends cc.Component {
                 }
             }
         }
-
-        // if(info.effectComonentName) this.node.getOrAddComponent(info.effectComonentName);
     }
 
     private recycle() : void {

@@ -1,4 +1,3 @@
-import PlatformManager from "../../platform/PlatformManager";
 import BaseConfig from "../config/BaseConfig";
 
 let md5 = require("../utils/Md5");

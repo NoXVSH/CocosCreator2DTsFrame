@@ -48,8 +48,8 @@ export default class GrayChildren extends cc.Component {
             let sprite = node.getComponent(cc.Sprite);
             if (sprite) {
                 let material = null;
-                if(isGray) material = (<any>cc.Material).getInstantiatedBuiltinMaterial("2d-gray-sprite", sprite);
-                else material = (<any>cc.Material).getInstantiatedBuiltinMaterial("2d-sprite", sprite);
+                if(isGray) material = (<any>cc).MaterialVariant.createWithBuiltin("2d-gray-sprite", sprite);
+                else material = (<any>cc).MaterialVariant.createWithBuiltin("2d-sprite", sprite);
 
                 sprite.setMaterial(0, material);
                 sprite._activateMaterial();

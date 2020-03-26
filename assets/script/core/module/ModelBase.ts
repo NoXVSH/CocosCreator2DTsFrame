@@ -34,10 +34,6 @@ export default class ModelBase {
 
     }
 
-    userInfoInitComplete() {
-        
-    }
-
     loginSuccess() {
         
     }

@@ -30,36 +30,7 @@ let normalConfig = {
     default_type: 0,//默认分享开关，0代表视频，1代表分享
     default_num: 3,//默认最大分享值
 
-    daylan_type: 0,//每日登陆分享开关，0代表视频，1代表分享
-    daylan_num: 3,//每日登陆最大分享值
 
-    power_type: 0,//体力不足OR按加号获得体力小弹窗获得体力分享开关，0代表视频，1代表分享（游戏中按下一关体力不足，及选关界面选中关卡体力不足）
-    power_num: 3,//分享获得体力最大次数
-
-    treble_type: 0,//获取物品后3倍领取，0视频，1代表分享[<-----]
-    treble_num: 3,//3倍领取，分享最大次数
-
-    tip_type: 0,//0代表视频，1代表分享
-    tip_num: 3,//tip分享最大次数，过后变成视频
-
-    doublegold_type: 0,//两倍金币分享开关，	0代表视频，1代表分享
-    doublegold_num: 3,//分享获得金币最大次数
-
-    draw_type: 0,//抽奖开关，0代表关闭，1代表开
-    draw_num: 3,//抽奖最大分享次数	
-
-    reward_type: 0,//抽奖奖励，0代表视频，1代表分享 [<-----]
-    reward_num: 3,//抽奖奖励最大次数。
-
-    propersitylevelreward_type : 0, //繁荣度升级翻倍领取
-    propersitylevelreward_num : 3,
-
-    buildvideoquest_type : 0, //建造其他任务 看视频得金元
-    buildvideoquest_num : 3,
-
-    gotoarea_switch : 0, // 0关闭分享视频，1开启分享视频
-    gotoarea_type : 0, //前往下一区域看视频 0代表视频，1代表分享
-    gotoarea_num : 500,
 };
 
 let config = normalConfig;

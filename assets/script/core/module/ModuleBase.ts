@@ -82,11 +82,19 @@ export default class ModuleBase extends cc.Component { //模块管理器基类
 
     private openUI(uiName : UINameEnum, data) {
         let func = this.uiOpenFuncMap[uiName];
+        if(!func) {
+            errorlog(`打开${uiName}错误, 未找到打开函数`);
+            return;
+        }
         func.call(this, data);
     }
 
     private closeUI(uiName : UINameEnum, data) {
         let func = this.uiCloseFuncMap[uiName];
+        if(!func) {
+            errorlog(`关闭${uiName}错误, 未找到关闭函数`);
+            return;
+        }
         func.call(this, data);
     }
 

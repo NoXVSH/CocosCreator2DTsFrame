@@ -1,8 +1,7 @@
 import { UILayer } from "./UILayer";
 import { EventType } from "../event/EventType";
 import EventManager from "../event/EventManager";
-import LoaderManager from "../loader/LoaderManager";
-import Util from "../utils/Util";
+import LoaderManager from "../loader/LoaderManager";;
 import ModuleManager from "../module/ModuleManager";
 import ResClearManager from "../loader/ResClearManager";
 import LoaderConst from "../loader/LoaderConst";
@@ -56,7 +55,7 @@ export default class UIManager {
 
         this.layerRecord = {}; //记录各层级显示的ui
         for (const layerName in UILayer) {
-            if (Util.Instance.strIsNum(layerName)) continue;
+            if (!isNaN(parseInt(layerName))) continue;
             this.layerRecord[UILayer[layerName]] = [];
         }
 
@@ -70,7 +69,7 @@ export default class UIManager {
     initLayer(): void {
         let node = null;
         for (const layerName in UILayer) {
-            if (Util.Instance.strIsNum(layerName)) continue;
+            if (!isNaN(parseInt(layerName))) continue;
 
             node = new cc.Node(layerName + "UI");
             this.nodeParent.addChild(node);
@@ -390,7 +389,7 @@ export default class UIManager {
     //关闭所有UI
     closeAllUI(isDestroy: boolean = false, isUnLoad: boolean = false): void {
         for (const key in UILayer) {
-            if (Util.Instance.strIsNum(key)) continue;
+            if (!isNaN(parseInt(key))) continue;
             this.closeUIByLayer(UILayer[key], isDestroy, isUnLoad);
         }
     }

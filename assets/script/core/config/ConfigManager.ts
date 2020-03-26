@@ -20,7 +20,7 @@ export default class ConfigManager {
     private loadAll(cb: Function): void {
         let completeCallback = cb;
 
-        Promise.all([this.loadGameData()])
+        this.loadGameData()
         .then(() =>  {
             completeCallback && completeCallback();
         })

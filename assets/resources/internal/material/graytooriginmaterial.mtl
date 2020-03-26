@@ -1,15 +1,18 @@
 {
   "__type__": "cc.Material",
-  "_name": "",
+  "_name": "graytooriginmaterial",
   "_objFlags": 0,
   "_native": "",
   "_effectAsset": {
     "__uuid__": "1c3dbdd7-c92f-46b9-aad1-523f8143f439"
   },
-  "_defines": {
-    "USE_TEXTURE": true
-  },
-  "_props": {
-    "duration": 0.5
+  "_techniqueIndex": 0,
+  "_techniqueData": {
+    "0": {
+      "props": {},
+      "defines": {
+        "USE_TEXTURE": true
+      }
+    }
   }
 }

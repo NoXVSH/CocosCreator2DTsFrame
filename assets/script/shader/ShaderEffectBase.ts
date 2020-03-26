@@ -43,7 +43,7 @@ export default class ShaderEffectBase extends cc.Component {
     __setShader(material: cc.Material) {
         this.startTime = Date.now();
 
-        let materialCopy = (<any>cc.Material).getInstantiatedMaterial(material, this.sprite);
+        let materialCopy = (<any>cc).MaterialVariant.create(material, this.sprite);
 
         this.sprite.setMaterial(0, materialCopy);
         this.sprite._activateMaterial();

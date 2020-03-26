@@ -1,112 +1,95 @@
-%{
-  techniques: [
-    {
-      passes: [
-        {
-          vert: vs
-          frag: fs
-          cullMode: none
-          blend: true
-        }
-      ]
-      layer: 0
-    }
-  ]
-  properties: {
-    texture: {
-      type: sampler2D
-      value: null
-    }
-    alphaThreshold: {
-      type: number
-      value: 0.5
-    }
-    diameter: {
-      type: number
-      value: 0.5
-    }
-  }
-%}
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs
+      frag: fs
+      blendState:
+        targets:
+        - blend: true
+      rasterizerState:
+        cullMode: none
+      properties:
+        texture: { value: white }
+        alphaThreshold: { value: 0.5 }
+        diameter: {value : 1.0}
+}%
 
-%% vs {
 
-precision lowp float;
+CCProgram vs %{
+  precision highp float;
 
-uniform mat4 cc_matViewProj;
+  #include <cc-global>
+  #include <cc-local>
 
-#if _USE_MODEL
-  uniform mat4 cc_matWorld;
-#endif
-
-attribute vec3 a_position;
-attribute lowp vec4 a_color;
-
-#if USE_TEXTURE
-  attribute mediump vec2 a_uv0;
-  varying mediump vec2 v_uv0;
-#endif
-
-varying lowp vec4 v_color;
-
-void main () {
-  mat4 mvp;
-  
-  #if _USE_MODEL
-    mvp = cc_matViewProj * cc_matWorld;
-  #else
-    mvp = cc_matViewProj;
-  #endif
+  in vec3 a_position;
+  in vec4 a_color;
+  out vec4 v_color;
 
   #if USE_TEXTURE
-    v_uv0 = a_uv0;
+  in vec2 a_uv0;
+  out vec2 v_uv0;
   #endif
 
-  v_color = a_color;
+  void main () {
+    vec4 pos = vec4(a_position, 1);
 
-  gl_Position = mvp * vec4(a_position, 1);
-}
+    #if CC_USE_MODEL
+    pos = cc_matViewProj * cc_matWorld * pos;
+    #else
+    pos = cc_matViewProj * pos;
+    #endif
 
-}
+    #if USE_TEXTURE
+    v_uv0 = a_uv0;
+    #endif
 
-%% fs {
+    v_color = a_color;
 
-precision highp float;
+    gl_Position = pos;
+  }
+}%
 
-#if USE_TEXTURE
+
+CCProgram fs %{
+  precision highp float;
+  
+  #include <alpha-test>
+
+  in vec4 v_color;
+
+  #if USE_TEXTURE
+  in vec2 v_uv0;
   uniform sampler2D texture;
-  varying mediump vec2 v_uv0;
-#endif
+  #endif
 
-varying lowp vec4 v_color;
-uniform float time;
-uniform float diameter;
+  uniform Constant {
+    float time;
+    float diameter;
+  };
 
-#include <alpha-test>
+  void main () {
+    vec4 originColor = v_color * texture2D(texture, v_uv0);
+    vec4 finalColr;
 
-void main () {
-  vec4 originColor = v_color * texture2D(texture, v_uv0);
-  vec4 finalColr;
+    float offsetX = abs(v_uv0.x - 0.5);
+    float offsetY = abs(v_uv0.y - 0.5);
 
-  float offsetX = abs(v_uv0.x - 0.5);
-  float offsetY = abs(v_uv0.y - 0.5);
+    float r = offsetX * offsetX + offsetY * offsetY;
+    float rad = (diameter *  diameter) / 4.0;
 
-  float r = offsetX * offsetX + offsetY * offsetY;
-  float rad = (diameter *  diameter) / 4.0;
+    // if(r < rad) {
+    //   finalColr = originColor;
+    // }
+    // else {
+    //   float rate = 1.0 - (-(r - rad) * (r - rad) * 1000.0 + rad) / rad;
+    //   finalColr = mix(originColor, vec4(0.0), rate);
+    // }
 
-  // if(r < rad) {
-  //   finalColr = originColor;
-  // }
-  // else {
-  //   float rate = 1.0 - (-(r - rad) * (r - rad) * 1000.0 + rad) / rad;
-  //   finalColr = mix(originColor, vec4(0.0), rate);
-  // }
+    float rate = smoothstep(rad - 0.04, rad, r);
+    finalColr = mix(originColor, vec4(0.0), rate);
 
-  float rate = smoothstep(rad - 0.04, rad, r);
-  finalColr = mix(originColor, vec4(0.0), rate);
+    ALPHA_TEST(finalColr);
+    gl_FragColor = finalColr;
+  }
+}%
 
-  ALPHA_TEST(finalColr);
-  gl_FragColor = finalColr;
-
-}
-
-}
