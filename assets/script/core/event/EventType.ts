@@ -8,7 +8,7 @@ export enum EventType {
 
     AppStart = "AppStart",
     BeforeEnterHome = "BeforeEnterHome",  //进入主界面前的时机, 进行配置表数据初始化
-    PreloadComplete = "PreLoadComplete",
+    FirstEnterHome = "FirstEnterHome",
 
     BtnClick = "BtnClick",
     AudioSettingChange = "AudioSettingChange",

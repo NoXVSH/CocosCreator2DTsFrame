@@ -139,9 +139,9 @@ export default class GamePreload {
         cc.find("Canvas/bg").active = false;
         PlatformManager.Instance.hideLoading();
         EventManager.Instance.emit(EventType.BeforeEnterHome); 
-        
+
         ModuleManager.Instance.openUI(ModuleName.Login, UINameEnum.Login, {
-            callback : () => EventManager.Instance.emit(EventType.PreloadComplete) //打开主页面 才算预加载完成
+            callback : () => EventManager.Instance.emit(EventType.FirstEnterHome) //打开主页面 才算预加载完成
         });
     }
 

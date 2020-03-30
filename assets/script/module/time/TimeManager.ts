@@ -20,7 +20,7 @@ export default class TimeManager extends ModuleBase {
     }
 
     addEvent() {
-        EventManager.Instance.on(EventType.PreloadComplete, this.initManager, this); //PreloadComplete时机 保证各模块数据已经初始化完成
+        EventManager.Instance.on(EventType.FirstEnterHome, this.initManager, this); 
         EventManager.Instance.on(EventType.GetNowTimesStamp, this.getNowTimestamp, this);
     }
 

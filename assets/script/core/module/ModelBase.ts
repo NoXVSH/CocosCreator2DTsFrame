@@ -19,7 +19,7 @@ export default class ModelBase {
         EventManager.Instance.on(EventType.ConfigLoadComplete, this.configLoadComplete, this);
         EventManager.Instance.on(EventType.LoginSuccess, this.loginSuccess, this);
         EventManager.Instance.on(EventType.BeforeEnterHome, this.beforeEnterHome, this);
-        EventManager.Instance.on(EventType.PreloadComplete, this.preloadComplete, this);
+        EventManager.Instance.on(EventType.FirstEnterHome, this.firstEnterHome, this);
     }
 
     modelInit() {
@@ -42,7 +42,7 @@ export default class ModelBase {
         
     }
 
-    preloadComplete() {
+    firstEnterHome() {
         
     }
 
