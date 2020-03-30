@@ -39,10 +39,11 @@ export default class GamePreload {
         }
 
         ModuleManager.Instance.openUI(ModuleName.Loading, UINameEnum.Loading, {
-            callback : () => EventManager.Instance.emit(EventType.LoadingOpen, {callback : info.complete, isUnload : true})
+            callback : () =>  {
+                EventManager.Instance.emit(EventType.LoadingOpen, {callback : info.complete, isUnload : true});
+                this.launch(info);
+            }
         });
-
-        this.launch(info);
     }
 
     private static launch(info): void {
