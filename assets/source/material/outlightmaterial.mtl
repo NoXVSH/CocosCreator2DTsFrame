@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.Material",
+  "_name": "outlightmaterial",
+  "_objFlags": 0,
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "c6b70b8f-a68e-4762-8da0-1b045c391ce0"
+  },
+  "_techniqueIndex": 0,
+  "_techniqueData": {
+    "0": {
+      "defines": {
+        "USE_TEXTURE": true
+      },
+      "props": {
+        "outLightColor": {
+          "__type__": "cc.Color",
+          "r": 31,
+          "g": 255,
+          "b": 0,
+          "a": 255
+        },
+        "outLightSize": 0.05,
+        "outThreshold": 0.9
+      }
+    }
+  }
+}
