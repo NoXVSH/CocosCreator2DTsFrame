@@ -5,6 +5,7 @@ import { HttpManager } from "../core/net/HttpManager";
 import Util from "../core/utils/Util";
 import BaseConfig from "../core/config/BaseConfig";
 import MyGlobal from "./MyGlobal";
+import { HttpApi } from "../core/net/HttpApi";
 
 export enum UserInfoPropertyKey {
     userid = "userid",
@@ -204,7 +205,7 @@ export default class UserInfo {
                     datas[upnames[k]] = property[upnames[k]];
                 }
             }
-            HttpManager.Instance.get('upload', datas, ret => {
+            HttpManager.Instance.get(HttpApi.UpLoadUserInfo, datas, ret => {
                 if (ret.errcode === 0) {
                     cc.sys.localStorage.setItem('datasync', 'ok');
                 }
@@ -223,7 +224,7 @@ export default class UserInfo {
         data.name = this.getPlatformUserName();
         data.imgpath = this.getPlatformUserIconUrl();
 
-        HttpManager.Instance.get('upload', data, ret => {
+        HttpManager.Instance.get(HttpApi.UpLoadUserInfo, data, ret => {
         });
     }
 
@@ -371,7 +372,7 @@ export default class UserInfo {
         data.userid = this.GetUserId();
         data.userjson = JSON.stringify({dataVersion : MyGlobal.Instance.Version});;
 
-        HttpManager.Instance.get('upload', data, ret => {
+        HttpManager.Instance.get(HttpApi.UpLoadUserInfo, data, ret => {
         });
     }
 

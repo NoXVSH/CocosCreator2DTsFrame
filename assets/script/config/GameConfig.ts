@@ -6,6 +6,7 @@ import { EventType } from "../core/event/EventType";
 import EventManager from "../core/event/EventManager";
 import { HttpManager } from "../core/net/HttpManager";
 import Util from "../core/utils/Util";
+import { HttpApi } from "../core/net/HttpApi";
 
 let istest = false;
 
@@ -55,7 +56,7 @@ export default class GameConfig {
         if (PlatformManager.Instance.isQueryGameConfig()) {
             let data = { clientversion: MyGlobal.Instance.Version, userid: UserInfo.Instance.GetUserId() };
 
-            HttpManager.Instance.get('gamecfg', data, function (ret) {
+            HttpManager.Instance.get(HttpApi.GameConfig, data, function (ret) {
                 if (ret && ret.data && ret.errcode === 0) {
                     if (!istest) {
                         for (let k in ret.data) {

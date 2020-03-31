@@ -9,6 +9,7 @@ import BaseConfig from "../../core/config/BaseConfig";
 import { ModuleName } from "../../core/module/ModuleName";
 import { UINameEnum } from "../../core/ui/UINameEnum";
 import BasePlatformApi from "../base/BasePlatformApi";
+import { HttpApi } from "../../core/net/HttpApi";
 
 export default class GameApi extends BasePlatformApi {
     login(cb: Function): void {
@@ -24,7 +25,7 @@ export default class GameApi extends BasePlatformApi {
             data = { account: 'user' + Math.floor(Math.random() * 1000000), channel: "" };
             cc.sys.localStorage.setItem("GameApiAccountInfo", JSON.stringify(data));
 
-            HttpManager.Instance.get('login', data, function (ret) {
+            HttpManager.Instance.get(HttpApi.Login, data, function (ret) {
                 log("登录状态==", ret.errmsg);
                 if (ret.data) {
                     UserInfo.Instance.setDataFromServer(ret.data); 

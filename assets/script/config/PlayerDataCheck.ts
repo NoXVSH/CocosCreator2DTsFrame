@@ -3,6 +3,7 @@ import Util from "../core/utils/Util";
 import DeviceID from "./DeviceID";
 import { HttpManager } from "../core/net/HttpManager";
 import MyGlobal from "./MyGlobal";
+import { HttpApi } from "../core/net/HttpApi";
 
 export default class PlayerDataCheck {
     private static _instance: PlayerDataCheck;
@@ -28,7 +29,7 @@ export default class PlayerDataCheck {
                 uploadData.userid = ret.data.userid;
                 uploadData.deviceId = result;
     
-                HttpManager.Instance.get('upload', uploadData, ret => {
+                HttpManager.Instance.get(HttpApi.UpLoadUserInfo, uploadData, ret => {
                 });
                 errorlog("设备id不同, 生成新设备id并上传");
             }

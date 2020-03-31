@@ -14,6 +14,7 @@ import WxVersionCheck from "./WxVersionCheck";
 import BaseConfig from "../../core/config/BaseConfig";
 import PlayerDataCheck from "../../config/PlayerDataCheck";
 import BasePlatformApi from "../base/BasePlatformApi";
+import { HttpApi } from "../../core/net/HttpApi";
 
 
 /*
@@ -131,7 +132,7 @@ export default class WxApi extends BasePlatformApi {
                     }
                 }
                 log("微信登录成功code:  " + loginResult.code);
-                HttpManager.Instance.getWithHeader("code", res, function (ret) {    //登录游戏服务器
+                HttpManager.Instance.getWithHeader(HttpApi.WxLogin, res, function (ret) {    //登录游戏服务器
                     if (ret.errcode === 0) {
                         log("登录游戏服务器成功！数据如下：");
                         log(ret);
