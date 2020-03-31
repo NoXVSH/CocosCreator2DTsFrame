@@ -94,26 +94,26 @@ CCProgram fs %{
   };
 
   #if USE_TEXTURE
-    float getFrameAlpha(float angle, float dist) {
+    float getPixAlpha(float angle, float dist) {
       float rad = angle * 0.01745329252;
       return texture(texture, vec2(v_uv0.x + cos(rad) * dist, v_uv0.y + sin(rad) * dist)).a;
     }
 
-    float getFrameNearAlpha(float dist) {
+    float getPixNearAlpha(float dist) {
       float alpha = 0.0;
 
-      alpha += getFrameAlpha(0.0, dist);
-      alpha += getFrameAlpha(30.0, dist);
-      alpha += getFrameAlpha(60.0, dist);
-      alpha += getFrameAlpha(90.0, dist);
-      alpha += getFrameAlpha(120.0, dist);
-      alpha += getFrameAlpha(150.0, dist);
-      alpha += getFrameAlpha(180.0, dist);
-      alpha += getFrameAlpha(210.0, dist);   
-      alpha += getFrameAlpha(240.0, dist);  
-      alpha += getFrameAlpha(270.0, dist);  
-      alpha += getFrameAlpha(300.0, dist);  
-      alpha += getFrameAlpha(330.0, dist);  
+      alpha += getPixAlpha(0.0, dist);
+      alpha += getPixAlpha(30.0, dist);
+      alpha += getPixAlpha(60.0, dist);
+      alpha += getPixAlpha(90.0, dist);
+      alpha += getPixAlpha(120.0, dist);
+      alpha += getPixAlpha(150.0, dist);
+      alpha += getPixAlpha(180.0, dist);
+      alpha += getPixAlpha(210.0, dist);   
+      alpha += getPixAlpha(240.0, dist);  
+      alpha += getPixAlpha(270.0, dist);  
+      alpha += getPixAlpha(300.0, dist);  
+      alpha += getPixAlpha(330.0, dist);  
       
       return alpha * 0.0833;  //1/12
     }
@@ -121,16 +121,16 @@ CCProgram fs %{
     float getOutAlpha(float dist) {
       float alpha = 0.0;
 
-      alpha += getFrameNearAlpha(dist * 0.1);
-      alpha += getFrameNearAlpha(dist * 0.2);
-      alpha += getFrameNearAlpha(dist * 0.3);
-      alpha += getFrameNearAlpha(dist * 0.4);
-      alpha += getFrameNearAlpha(dist * 0.5);
-      alpha += getFrameNearAlpha(dist * 0.6);   
-      alpha += getFrameNearAlpha(dist * 0.7);  
-      alpha += getFrameNearAlpha(dist * 0.8);
-      alpha += getFrameNearAlpha(dist * 0.9);
-      alpha += getFrameNearAlpha(dist * 1.0); 
+      alpha += getPixNearAlpha(dist * 0.1);
+      alpha += getPixNearAlpha(dist * 0.2);
+      alpha += getPixNearAlpha(dist * 0.3);
+      alpha += getPixNearAlpha(dist * 0.4);
+      alpha += getPixNearAlpha(dist * 0.5);
+      alpha += getPixNearAlpha(dist * 0.6);   
+      alpha += getPixNearAlpha(dist * 0.7);  
+      alpha += getPixNearAlpha(dist * 0.8);
+      alpha += getPixNearAlpha(dist * 0.9);
+      alpha += getPixNearAlpha(dist * 1.0); 
 
       return alpha * 0.1;                     
     }
@@ -166,10 +166,6 @@ CCProgram fs %{
     vec4 targetColor = outLightColor;
     targetColor.a *= alpha;
 
-
     gl_FragColor = o * o.a + targetColor * (1.0 - o.a);
-
-
-    // gl_FragColor = o;
   }
 }%
