@@ -2,6 +2,7 @@
   "android-instant": {
     "REMOTE_SERVER_ROOT": "http://10.1.1.99:7456/preview-android-instant/",
     "host": "",
+    "packageName": "org.cocos2d.idiomtown",
     "pathPattern": "",
     "recordPath": "",
     "scheme": "https",
@@ -16,7 +17,7 @@
   },
   "encryptJs": true,
   "excludeScenes": [
-    "44161c70-5dfa-49ff-bf87-d49bc16843e5"
+    "ec35a411-4a75-4fd9-90fb-9116b0c82f87"
   ],
   "fb-instant-games": {},
   "includeSDKBox": false,
@@ -37,7 +38,7 @@
     "orientation": "portrait",
     "zip": false
   },
-  "startScene": "ec35a411-4a75-4fd9-90fb-9116b0c82f87",
+  "startScene": "464fa83b-424b-44bf-9c60-069acbe29ac7",
   "title": "IdiomTown",
   "webOrientation": "portrait",
   "wechatgame": {
@@ -47,5 +48,15 @@
     "subContext": "wx-open-data-project"
   },
   "xxteaKey": "996d0505-7542-42",
-  "zipCompressJs": true
+  "zipCompressJs": true,
+  "android": {
+    "packageName": "org.cocos2d.idiomtown"
+  },
+  "ios": {
+    "packageName": "org.cocos2d.idiomtown"
+  },
+  "mac": {
+    "packageName": "org.cocos2d.idiomtown"
+  },
+  "win32": {}
 }

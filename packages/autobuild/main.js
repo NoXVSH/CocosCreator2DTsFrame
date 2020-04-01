@@ -276,7 +276,7 @@ function compressionPng(compressList) {
 
   if (offset == 0) {
     threadCount = 1;
-    createCompressThread(0, compressList.length - 1, 1);
+    createCompressThread(compressList, 0, compressList.length - 1, 1);
   }
   else {
     for (let i = 1; i <= threadCount; i++) {
@@ -287,6 +287,7 @@ function compressionPng(compressList) {
       } else {
         endIndex = compressList.length - 1;
       }
+
       createCompressThread(compressList, startIndex, endIndex, i);
     }
   }
@@ -299,6 +300,7 @@ function createCompressThread(list, startIndex, endIndex, i) {
 
   let index = startIndex;
   let item = list[index];
+
   let exe_cmd = cmd + ' ' + item.path;
 
   function exec() {
