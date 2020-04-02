@@ -21,6 +21,13 @@ export default class QueueLoaderBase {
     loadingCount : number = 0;
     queueLoader : QueueLoaderInterface;
 
+    loadPromise(url: string, type: typeof cc.Asset | string) : Promise<any> {
+        let p = new Promise((resolve, reject) => {
+            this.load(url, type, resolve, reject);
+        });
+        return p;
+    }
+
     load(url: string, type: string | typeof cc.Asset, callback: Function, errorback?: Function) {
         let queueItem: QueueLoaderItem = {
             url: url, type: type, callback: callback, errorback: errorback, isLoading : false, timeOutTick : null

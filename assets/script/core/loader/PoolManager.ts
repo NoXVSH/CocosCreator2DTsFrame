@@ -14,6 +14,13 @@ export default class PoolManager {
     private pool : {[key : string] : cc.NodePool} = {}; 
     private loadRecord : {[key : string] : number} = {};
 
+    getPromise(url : string, type : typeof cc.Asset) : Promise<any> {
+        let p = new Promise((resolve, reject) => {
+            this.get(url, type, resolve);
+        });
+        return p;
+    }
+
     get(url : string, type : typeof cc.Asset, callback : Function) : void {
         let pool = this.pool[url];
 

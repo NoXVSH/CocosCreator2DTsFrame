@@ -54,6 +54,48 @@ export class HttpManager {
         if (!this.url) errorlog("服务器地址为空！！！！！！！！！！");
     }
 
+    getPromise(path : string, data : any, serverUrl? : string) : Promise<any> {
+        let p = new Promise((resolve, reject) => {
+            this.get(path, data, resolve, serverUrl);
+        });
+        return p;
+    }
+
+    getFilePromise(fileName : string) : Promise<any> {
+        let p = new Promise((resolve, reject) => {
+            this.getFile(fileName, resolve);
+        });
+        return p;
+    }
+
+    getWithHeaderPromise(path : string, data : any) : Promise<any> {
+        let p = new Promise((resolve, reject) => {
+            this.getWithHeader(path, data, resolve);
+        });
+        return p;
+    }
+
+    postPromise(path : string, data : any, serverUrl? : string) {
+        let p = new Promise((resolve, reject) => {
+            this.post(path, data, resolve, serverUrl);
+        });
+        return p;
+    }
+
+    requestPromise(requestURL : string,) {
+        let p = new Promise((resolve, reject) => {
+            this.request(requestURL, resolve);
+        });
+        return p;
+    }
+
+    requestTextPromise(requestURL: string) {
+        let p = new Promise((resolve, reject) => {
+            this.requestText(requestURL, resolve);
+        });
+        return p;
+    }
+
     get(path : string, data : any, handler : Function, serverUrl? : string) : XMLHttpRequest {
         let xhr = cc.loader.getXMLHttpRequest();
         xhr.timeout = 5000;

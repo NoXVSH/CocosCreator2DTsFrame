@@ -28,6 +28,20 @@ export default class LoaderManagerBase {
 
     protected name: string = "LoaderManagerBase";
 
+    loadPromise(url: string, type: typeof cc.Asset | string) : Promise<any> {
+        let p = new Promise((resolve, reject) => {
+            this.load(url, type, resolve, reject);
+        });
+        return p;
+    }
+
+    silentLoadPromise(url: string, type: typeof cc.Asset | string) {
+        let p = new Promise((resolve, reject) => {
+            this.silentLoad(url, type, resolve);
+        });
+        return p;
+    }
+
     /**
      * 正常加载, 走资源计数
      * @param url 
