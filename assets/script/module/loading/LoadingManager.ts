@@ -1,8 +1,6 @@
 import { UILayer } from "../../core/ui/UILayer";
 import ModuleBase from "../../core/module/ModuleBase";
 import UIManager, { UIInfoStruct } from "../../core/ui/UIManager";
-import EventManager from "../../core/event/EventManager";
-import { EventType } from "../../core/event/EventType";
 import { UINameEnum } from "../../core/ui/UINameEnum";
 
 const {ccclass, property} = cc._decorator;
@@ -36,7 +34,7 @@ export default class LoadingManager extends ModuleBase {
         this.registerUIInfo(this.smallLoadingUIInfo, this.openSmallLoading, this.close);
     };
 
-    //type : 0 等待加载回应 type : 1 等待网络回应
+    //type : 0 不显示全屏界面 type : 3 显示全屏背景
     openSmallLoading(data) : void {
         let key = data.key == null ? "default" : data.key;
         let type = data.type == null ? 0 : data.type;
