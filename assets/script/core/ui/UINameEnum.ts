@@ -7,4 +7,8 @@ export enum UINameEnum {
     MessageBox = "internal/prefab/messagebox/messagebox",
 
     Tip = "internal/prefab/tip/tip",
+
+    SampleActivity1 = "internal/prefab/sample/sampleactivity1",
+    SampleActivity2 = "internal/prefab/sample/sampleactivity2",
+    SampleActivity3 = "internal/prefab/sample/sampleactivity3",
 }

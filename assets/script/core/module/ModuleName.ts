@@ -7,6 +7,7 @@ export enum ModuleName {
     Energy = "Energy",
     Prop = "Prop", //道具
     Time = "Time", //时间 
+    Sample = "Sample", //示例
 }
 
 // window.regVar("ModuleName", ModuleName);
