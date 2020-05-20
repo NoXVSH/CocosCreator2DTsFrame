@@ -1,4 +1,4 @@
-import UserInfo, { UserInfoJsonKey } from "./UserInfo";
+import UserInfo from "./UserInfo";
 import Util from "../core/utils/Util";
 import DeviceID from "./DeviceID";
 import { HttpManager } from "../core/net/HttpManager";

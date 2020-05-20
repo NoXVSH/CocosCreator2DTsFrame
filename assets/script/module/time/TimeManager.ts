@@ -2,8 +2,9 @@ import ModuleBase from "../../core/module/ModuleBase";
 import EventManager from "../../core/event/EventManager";
 import {EventType} from "../../core/event/EventType";
 import TimeUtils from "../../core/utils/TimeUtils";
-import UserInfo, { UserInfoJsonKey } from "../../config/UserInfo";
+import UserInfo from "../../config/UserInfo";
 import MyGlobal from "../../config/MyGlobal";
+import { UserInfoJsonKey } from "../../config/UserInfoEnum";
 
 const {ccclass, property} = cc._decorator;
 

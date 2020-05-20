@@ -6,61 +6,14 @@ import Util from "../core/utils/Util";
 import BaseConfig from "../core/config/BaseConfig";
 import MyGlobal from "./MyGlobal";
 import { HttpApi } from "../core/net/HttpApi";
-
-export enum UserInfoPropertyKey {
-    userid = "userid",
-}
-
-export enum UserInfoJsonKey {
-    gold = "gold",
-    energy = "energy",
-    energyRecoverTime = "energyRecoverTime",
-
-    watchVideoCount = "watchVideoCount",
-    
-    isGM = "isGM",
-
-    dailyTaskDate = "dailyTaskDate",
-
-    dataVersion = "dataVersion",
-}
+import MapTypeDataName, { UserInfoPropertyKey, UserInfoJsonKey } from "./UserInfoEnum";
+import property from "./UserInfoProperty";
 
 const SAVE_KEY_PREFIX = "userdata-";
-const MapTypeDataName = [ //键值对数据名注册
-
-];
 
 /*
 功能：定义玩家存储数据的数据结构，实现内存-本地，内存-服务器数据转换
 */
-let property = {
-    userid: 0,
-    imgindex: 0,
-    score: 0,
-    maxscore: 0,
-    userjson: {
-        gold: 100, //初始金币
-        energy: 0,
-        energyRecoverTime: 0,
-
-        watchVideoCount: 0,
-        
-        dailyTaskDate: "2019-01-01",
-
-        isGM: false,
-
-        dataVersion: "",
-    },
-    //////////////////////
-    reftime: 0, // 分数刷新时间
-    phone_brand: "",//手机品牌
-    phone_model: "",//手机型号
-    wx_version: "",//微信版本号
-    platform: "ios",//"android",
-    name: "", //平台用户名称
-    imgpath: "", //平台用户头像
-};
-
 export default class UserInfo {
     private static _instance: UserInfo;
 

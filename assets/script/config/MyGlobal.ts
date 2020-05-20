@@ -3,7 +3,8 @@ import PlatformManager from "../platform/PlatformManager";
 import { HttpManager } from "../core/net/HttpManager";
 import EventManager from "../core/event/EventManager";
 import { EventType } from "../core/event/EventType";
-import UserInfo, { UserInfoJsonKey } from "./UserInfo";
+import UserInfo from "./UserInfo";
+import { UserInfoJsonKey } from "./UserInfoEnum";
 
 // 本地数据配置
 let localInfo = {

@@ -1,10 +1,11 @@
 import ModuleBase from "../../core/module/ModuleBase";
 import { PropEnum, PropMasterType } from "./PropEnum";
-import UserInfo, { UserInfoJsonKey } from "../../config/UserInfo";
+import UserInfo from "../../config/UserInfo";
 import EventManager from "../../core/event/EventManager";
 import { EventType } from "../../core/event/EventType";
 import PropIconPool from "./PropIconPool";
 import ConfigManager from "../../core/config/ConfigManager";
+import { UserInfoJsonKey } from "../../config/UserInfoEnum";
 
 const { ccclass, property } = cc._decorator;
 

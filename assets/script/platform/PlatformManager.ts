@@ -2,6 +2,7 @@ import WxApi from "./wx/WxApi";
 import GameApi from "./game/GameApi";
 import BasePlatformApi from "./base/BasePlatformApi";
 import PlaformUtils from "./PlaformUtils";
+import LocalGameApi from "./game/LocalGameApi";
 
 export default class PlatformManager {
     private static _proxy: BasePlatformApi;
@@ -23,7 +24,8 @@ export default class PlatformManager {
                 this._proxy = new WxApi();
                 break;
             default:
-                this._proxy = new GameApi();
+                // this._proxy = new GameApi();
+                this._proxy = new LocalGameApi();
                 break;
         }
 

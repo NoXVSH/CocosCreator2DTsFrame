@@ -14,17 +14,17 @@ interface BaseConfigStruct {
     logLevel : cc.debug.DebugMode;
 }
 
-let ResUrl = "https://wx-dream.sihai-inc.com/idiomTown/";
+let ResUrl = "";
 
 let DevelopServerConfig : ServerConfigStruct = {
-    url : 'https://wxsg-clb-forall.sihai-inc.com/idiomTown/',
-    testUrl : `https://wxsg-clb-forall-test.sihai-inc.com/idiomTown_test/`,
+    url : '',
+    testUrl : ``,
     resUrl : ResUrl
 }
 
 let WxServerConfig : ServerConfigStruct = {
-    url : 'https://wxsg-clb-forall.sihai-inc.com/idiomTown/',
-    testUrl : `https://wxsg-clb-forall-test.sihai-inc.com/idiomTown_test/`,
+    url : '',
+    testUrl : ``,
     resUrl : ResUrl
 }
 

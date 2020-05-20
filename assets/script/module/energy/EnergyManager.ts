@@ -1,9 +1,10 @@
 import ModuleBase from "../../core/module/ModuleBase";
 import EventManager from "../../core/event/EventManager";
 import { EventType } from "../../core/event/EventType";
-import UserInfo, {UserInfoJsonKey} from "../../config/UserInfo";
+import UserInfo from "../../config/UserInfo";
 import EnergyConst from "./const/EnergyConst";
 import {PropEnum} from "../prop/PropEnum";
+import { UserInfoJsonKey } from "../../config/UserInfoEnum";
 
 const {ccclass, property} = cc._decorator;
 
