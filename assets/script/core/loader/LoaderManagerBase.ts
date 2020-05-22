@@ -28,7 +28,7 @@ export default class LoaderManagerBase {
 
     protected name: string = "LoaderManagerBase";
 
-    loadPromise(url: string, type: typeof cc.Asset | string) : Promise<any> {
+    loadPromise(url: string, type: typeof cc.Asset | string): Promise<any> {
         let p = new Promise((resolve, reject) => {
             this.load(url, type, resolve, reject);
         });
@@ -98,7 +98,7 @@ export default class LoaderManagerBase {
         }
     }
 
-    createInfo(url: string, type: typeof cc.Asset | string, callback: Function, errorback?: Function): LoaderStruct {
+    private createInfo(url: string, type: typeof cc.Asset | string, callback: Function, errorback?: Function): LoaderStruct {
         let info = {} as LoaderStruct;
         info.url = url;
         info.type = type;
@@ -115,18 +115,18 @@ export default class LoaderManagerBase {
         return info;
     }
 
-    loadAsset(info: LoaderStruct): void {
+    private loadAsset(info: LoaderStruct): void {
         this._isLoading[info.url] = true;
         this.__engineLoad(info);
         this.__setInfoTimeOutFunc(info);
     }
 
     //子类重写
-    __engineLoad(info: LoaderStruct) {
+    protected __engineLoad(info: LoaderStruct) {
 
     }
 
-    __loadResultHandler(info: LoaderStruct, error: any, resource) {
+    protected __loadResultHandler(info: LoaderStruct, error: any, resource) {
         delete this._isLoading[info.url];
         clearTimeout(info.timeoutFuncTick);
 
@@ -160,7 +160,7 @@ export default class LoaderManagerBase {
         this.checkLoadComplete();
     }
 
-    __setInfoTimeOutFunc(info: LoaderStruct) {
+    private __setInfoTimeOutFunc(info: LoaderStruct) {
         info.timeoutFuncTick = setTimeout(() => {
             info.isTimeout = true;
             errorlog(info.url + `加载超时了---${this.name}`);
@@ -169,7 +169,7 @@ export default class LoaderManagerBase {
         }, LoaderConst.LoadTimeOut * 1000);
     }
 
-    checkLoadComplete(): void {
+    private checkLoadComplete(): void {
         let tempList = [];
         for (let i = 0; i < this._waitList.length; i++) { //优先处理列表前面的
             let info = this._waitList[i];
@@ -186,7 +186,7 @@ export default class LoaderManagerBase {
         this._waitList = tempList;
     }
 
-    checkLoadError(url: string, errortype: LoadErrorEnum): void {
+    private checkLoadError(url: string, errortype: LoadErrorEnum): void {
         let errorList = [];
 
         for (let i = this._waitList.length - 1; i >= 0; i--) {
@@ -250,18 +250,18 @@ export default class LoaderManagerBase {
         }
     }
 
-    removeCache(info: LoaderStruct) {
+    private removeCache(info: LoaderStruct) {
         warnlog(`unload 释放缓存 ---${this.name}---:`, info.url);
         this.removeReference(info);
         delete this._urlMap[info.url];
     }
 
     //子类重写
-    addReference(info: LoaderStruct): void {
+    protected addReference(info: LoaderStruct): void {
 
     }
 
-    __addReference(depends: any[]) {
+    protected __addReference(depends: any[]) {
         for (let i = 0, len = depends.length; i < len; i++) {
             if (this._references[depends[i]] == null) {
                 this._references[depends[i]] = 1;
@@ -271,7 +271,7 @@ export default class LoaderManagerBase {
         }
     }
 
-    removeReference(info: LoaderStruct): void {
+    private removeReference(info: LoaderStruct): void {
         let depends = info.depends;
         if (!depends) {
             warnlog(`removeReference fail info not exist depends ---- ${this.name} --- `, info);
@@ -323,17 +323,18 @@ export default class LoaderManagerBase {
         return null;
     }
 
-    checkIsCanRemoveCache(info: LoaderStruct): boolean {
+    private isCanRemoveCache(info: LoaderStruct, isForce : boolean = false): boolean {
+        if(isForce && info.count == 0) return true;
         if (!info.unloaded) return false;
         let offsetTime = (Date.now() - info.unloadTime) / 1000;
         return offsetTime >= LoaderConst.ReleaseWaitTime;
     }
 
-    checkRemoveCache(isForce: boolean) {
+    private checkRemoveCache(isForce: boolean) {
         for (const key in this._urlMap) {
             let info = this._urlMap[key];
-            let canRemoveCache = this.checkIsCanRemoveCache(info);
-            if (canRemoveCache || (isForce && info.count == 0)) this.removeCache(info);
+            let canRemoveCache = this.isCanRemoveCache(info, isForce);
+            canRemoveCache && this.removeCache(info);
             // if(info.unloaded) warnlog(`unload 未达到释放时间 保存缓存 ---${this.name}---:`, key);
         }
     }

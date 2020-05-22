@@ -1,4 +1,3 @@
-import PlatformManager from "../../platform/PlatformManager";
 import LoaderManagerBase, { LoaderStruct } from "./LoaderManagerBase";
 
 export default class LoaderManager extends LoaderManagerBase{
@@ -14,13 +13,13 @@ export default class LoaderManager extends LoaderManagerBase{
 
     protected name : string = "LoaderManager";
 
-    __engineLoad(info : LoaderStruct) {
+    protected __engineLoad(info : LoaderStruct) {
         cc.loader.loadRes(info.url, info.type as typeof cc.Asset, (error : any, resource) => {
             this.__loadResultHandler(info, error, resource);
         });
     }
 
-    addReference(info : LoaderStruct): void {
+    protected addReference(info : LoaderStruct): void {
         if (info.depends == null) info.depends = cc.loader.getDependsRecursively(info.url);
         this.__addReference(info.depends);
     }

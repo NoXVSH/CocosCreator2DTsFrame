@@ -14,13 +14,13 @@ export default class LoaderExternalManager extends LoaderManagerBase {
     
     protected name : string = "LoaderExternalManager";
 
-    __engineLoad(info: LoaderStruct) {
+    protected __engineLoad(info: LoaderStruct) {
         cc.loader.load(info.type ? { url: info.url, type: info.type as string } : info.url, (error: any, resource) => {
             this.__loadResultHandler(info, error, resource);
         });
     }
 
-    addReference(info : LoaderStruct): void {
+    protected addReference(info : LoaderStruct): void {
         if (info.depends == null) info.depends = [info.url];
         this.__addReference(info.depends);
     }
