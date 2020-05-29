@@ -14,7 +14,7 @@ export default class IconLoader extends cc.Component {
     isLoadFromEditor: boolean = false;
 
     @property(cc.Boolean)
-    isPackable: boolean = true;
+    isPackable: boolean = false;
 
     @property
     editorUrl: string = "这里填图片路径";
@@ -24,6 +24,7 @@ export default class IconLoader extends cc.Component {
 
     loader : QueueLoaderBase;
     type : string | typeof cc.Asset;
+    tick: number;
 
     onLoad() {
         if (this.isLoadFromEditor) this.setIcon(this.editorUrl);
@@ -57,7 +58,7 @@ export default class IconLoader extends cc.Component {
 
     loadAsset(url: string, callback: Function) {
         this.url = url;
-        this.loader.load(url, this.type, (texture : cc.Texture2D) => {
+        this.tick = this.loader.load(url, this.type, (texture : cc.Texture2D) => {
             if (cc.isValid(this._sprite) && texture) {
                 texture.packable = this.isPackable;
                 this._sprite.spriteFrame = new cc.SpriteFrame(texture);
@@ -66,9 +67,10 @@ export default class IconLoader extends cc.Component {
         });
     }
 
-    clear(force : boolean = false) {
+    private clear(force : boolean = false) {
         if (this.url != null) {
-            this.loader.unload(this.url, force);
+            this.loader.unload(this.tick, force);
+            this.tick = null;
             this.url = null;
         }
     }
