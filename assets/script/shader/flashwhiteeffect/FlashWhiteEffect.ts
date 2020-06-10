@@ -5,7 +5,7 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class FlashWhiteEffect extends ShaderEffectBase {
-    materialUrl: string = "material/flasheffectmaterial";
+    materialUrl: string = "internal/material/flashwhiteeffectmaterial";
 
     update(dt) {
         if (this.usingMaterial) {

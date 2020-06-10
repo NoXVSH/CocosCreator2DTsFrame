@@ -2,11 +2,12 @@ import BaseView from "../../../core/ui/BaseView";
 import ModuleManager from "../../../core/module/ModuleManager";
 import { ModuleName } from "../../../core/module/ModuleName";
 import { UINameEnum } from "../../../core/ui/UINameEnum";
+import ActivityView from "../../../core/ui/ActivityView";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class MessageBoxView extends BaseView {
+export default class MessageBoxView extends ActivityView {
 
     @property(cc.Label)
     descTxt: cc.Label = null;

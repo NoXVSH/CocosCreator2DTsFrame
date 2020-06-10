@@ -1,0 +1,134 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs
+      frag: fs
+      blendState:
+        targets:
+        - blend: true
+      rasterizerState:
+        cullMode: none
+      properties:
+        texture: { value: white }
+}%
+
+
+CCProgram vs %{
+  precision highp float;
+
+  #include <cc-global>
+  #include <cc-local>
+
+  in vec3 a_position;
+  in vec4 a_color;
+  out vec4 v_color;
+
+  #if USE_TEXTURE
+  in vec2 a_uv0;
+  out vec2 v_uv0;
+  #endif
+
+  void main () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if CC_USE_MODEL
+    pos = cc_matViewProj * cc_matWorld * pos;
+    #else
+    pos = cc_matViewProj * pos;
+    #endif
+
+    #if USE_TEXTURE
+    v_uv0 = a_uv0;
+    #endif
+
+    v_color = a_color;
+
+    gl_Position = pos;
+  }
+}%
+
+
+CCProgram fs %{
+  precision highp float;
+
+  in vec4 v_color;
+
+  #if USE_TEXTURE
+  in vec2 v_uv0;
+  uniform sampler2D texture;
+  #endif
+
+  uniform Constant {
+    float width; //调整该值改变流光的宽度
+    float strength; //调整该值改变流光的亮度
+    float offset; //调整该值改变流光的倾斜程度
+    float startPos; //流光开始位置(处于(-0.5, 2.0)之间)
+    float time;
+    float offsetX;
+    float offsetY;
+    float uvXStart;
+    float uvYStart;
+    float isRotated;
+    float isRotateFlash;
+  };
+
+  void main () {
+    vec4 mainColor = v_color * texture2D(texture, v_uv0);
+
+    vec2 originUv = v_uv0.xy;
+
+    originUv.x = (originUv.x - uvXStart) / offsetX;
+    originUv.y = (originUv.y - uvYStart) / offsetY;
+
+    vec2 uv = originUv.xy;
+
+    if(isRotated == 1.0) { //逆时针旋转270°
+        uv.x = originUv.y;
+        uv.y = -originUv.x + 1.0;
+     }
+
+    if(isRotateFlash == 1.0) { //从上到下
+        float start = startPos - offset * uv.x - width;
+        float end = start + width;
+    
+        float center = (start + end) / 2.0;
+        float halfWidth = width / 2.0;
+    
+        if(uv.y > start && uv.y < end)
+        {
+            float rate =  (halfWidth - abs(center - uv.y)) / halfWidth;
+    
+            vec3 improve = strength * vec3(255.0, 255.0, 255.0) * rate;
+            vec3 result = improve + vec3( mainColor.r, mainColor.g, mainColor.b);
+    
+            gl_FragColor = vec4(result, mainColor.a);
+        }
+        else
+        {
+            gl_FragColor = mainColor;
+        }
+    }
+    else { //从左到右
+        float start = startPos - offset * uv.y - width;
+        float end = start + width;
+    
+        float center = (start + end) / 2.0;
+        float halfWidth = width / 2.0;
+    
+        if(uv.x > start && uv.x < end)
+        {
+            float rate = (halfWidth - abs(center - uv.x)) / halfWidth;
+    
+            vec3 improve = strength * vec3(255.0, 255.0, 255.0) * rate;
+            vec3 result = improve + vec3( mainColor.r, mainColor.g, mainColor.b);
+    
+            gl_FragColor = vec4(result, mainColor.a);
+        }
+        else
+        {
+            gl_FragColor = mainColor;
+        }
+    }
+  }
+}%
+

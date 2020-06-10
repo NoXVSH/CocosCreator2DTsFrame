@@ -2,6 +2,7 @@ import ModuleManager from "../../../core/module/ModuleManager";
 import BaseView from "../../../core/ui/BaseView";
 import EventManager from "../../../core/event/EventManager";
 import { EventType } from "../../../core/event/EventType";
+import { ModuleName } from "../../../core/module/ModuleName";
 
 const {ccclass, property} = cc._decorator;
 
@@ -19,7 +20,7 @@ export default class SmallLoadingView extends BaseView {
 
     getEvents() {
         return [
-            [ModuleManager.Instance.Loading, "setSmallLoadingType", this.setView, this],
+            [ModuleManager.Instance.getManager(ModuleName.Loading), "setSmallLoadingType", this.setView, this],
             [this.node, "closeWithAnim", this.closeWithAnim, this],
         ];
     }
@@ -35,14 +36,14 @@ export default class SmallLoadingView extends BaseView {
     }
 
     closeWithAnim(cb) {
-        EventManager.Instance.emit(EventType.ShowGlobalBlock);
+        EventManager.Instance.emit(EventType.ShowGlobalBlock, "SmallLoadingView");
 
         this.node.runAction(
             cc.sequence(
                 cc.fadeOut(0.5),
                 cc.callFunc(() =>{
                     cb && cb();
-                    EventManager.Instance.emit(EventType.HideGlobalBlock);
+                    EventManager.Instance.emit(EventType.HideGlobalBlock, "SmallLoadingView");
                 }, this)
             )
         );

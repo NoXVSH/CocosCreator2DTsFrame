@@ -10,8 +10,6 @@ import { UserInfoJsonKey } from "./UserInfoEnum";
 let localInfo = {
     isSound: true,  //是否开启音效
     isVibrate: true, //是否开启震动
-    mulDrawRate : 1, //抽奖的倍率
-    drawCount : 0, //抽奖次数
     showAllLog : false,
     showGmBtn : false,
 };

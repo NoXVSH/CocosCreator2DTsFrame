@@ -8,7 +8,7 @@ export default class GrayToOriginEffect extends ShaderEffectBase {
     @property(cc.Float)
     duration = 1.0;
 
-    materialUrl: string = "material/graytooriginmaterial";
+    materialUrl: string = "internal/material/graytooriginmaterial";
 
     update(dt) {
         if (this.usingMaterial) {
