@@ -1,0 +1,19 @@
+{
+  "name": "scriptgenerate",
+  "version": "0.0.1",
+  "description": "自动生成模块代码",
+  "author": "NoXVSH",
+  "main": "main.js",
+  "main-menu": {
+    "工具/模块脚本生成": {
+      "message": "scriptgenerate:open"
+    }
+  },
+  "panel": {
+    "main": "panel/index.js",
+    "type": "dockable",
+    "title": "模块脚本生成",
+    "width": 400,
+    "height": 300
+  }
+}

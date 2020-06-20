@@ -1,6 +1,6 @@
 import ModelBase from "../../../core/module/ModelBase";
 
-export default class SampleModel extends ModelBase {
+export default class _ModuleName_Model extends ModelBase {
 
     modelInit() {
 
@@ -22,9 +22,8 @@ export default class SampleModel extends ModelBase {
         
     }
 
-    firstEnterHome() {
+    preloadComplete() {
         
     }
-
 
 }

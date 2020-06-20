@@ -1,0 +1,21 @@
+import ModuleBase from "../../core/module/ModuleBase";
+import _ModuleName_Model from "./model/_ModuleName_Model";
+
+const { ccclass, property } = cc._decorator;
+
+@ccclass
+export default class _ModuleName_Manager extends ModuleBase {
+
+    init() {
+        super.init();
+    }
+
+    getModelClass() {
+        return [_ModuleName_Model];
+    }
+
+    addEvent() {
+        super.addEvent();
+    }
+
+}
