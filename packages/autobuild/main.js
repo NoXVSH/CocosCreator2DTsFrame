@@ -11,12 +11,29 @@ var beforeBuildFinishCallBack = null;
 
 let unCompressArray = [ //这边type 一律都是sprite-frame
   ['db://assets/source/texture/background/**/*', 'sprite-frame'],  
-  ['db://assets/source_remote/texture/background/**/*', 'sprite-frame'],   
+  ['db://assets/source/texture/special/**/*', 'sprite-frame'],  
+  ['db://assets/source_remote/texture/background/**/*', 'sprite-frame'],  
+  ['db://assets/source_remote/texture/special/**/*', 'sprite-frame'],  
+  ['db://assets/resources/texture/unit/**/*', 'sprite-frame'], 
 ];
 
 let moveToOutArray = [
-  ['db://assets/source_remote/**/*'], 
-  ['db://assets/resources/remote/**/*'], 
+  ['db://assets/source_remote/**/*'],  
+
+  ['db://assets/resources/mp3/out/*'],  
+  ['db://assets/resources/config/out/**/*'],  
+  ['db://assets/resources/fnt/out/**/*'], 
+
+  ['db://assets/resources/texture/build/**/*'], 
+  ['db://assets/resources/texture/unit/**/*'], 
+  ['db://assets/resources/texture/godcard/**/*'], 
+  ['db://assets/resources/texture/prop/**/*'], 
+  ['db://assets/resources/texture/story/**/*'], 
+  ['db://assets/resources/texture/pet/**/*'], 
+  ['db://assets/resources/texture/randomquest/**/*'], 
+  ['db://assets/resources/texture/qualityframe/**/*'],
+
+  ['db://assets/resources/prefab_remote/**/*'], 
 ];
 
 function onBuildStart(options, callback) {
@@ -38,11 +55,6 @@ function onBuildStart(options, callback) {
 }
 
 function onBeforeBuildFinish(options, callback) {
-  if(options.buildScriptsOnly) {
-      callback();
-      return;
-  }
-
   let buildResults = options.buildResults;
 
   for (let i = 0, len = unCompressArray.length; i < len; i++) {
@@ -144,8 +156,18 @@ function buildFinished(options, callback) {
   buildPath = Editor.Project.path + path.sep + "build" + path.sep + platform;
   Editor.log("当前平台++++  " + buildPath);
 
-  if (platform != "web-mobile" && !options.buildScriptsOnly) {
+  if (platform != "web-mobile") {
     startCopyOutRes();
+    Editor.log(options);
+    if(!options.debug) {
+      setTimeout(function() {
+        Editor.log("发送上传至CDN指令");
+        Editor.Ipc.sendToMain('autodeploytocdn:startUpload');
+      }, 1000);
+    }
+    else {
+      Editor.log("调试包, 不上传资源到cdn");
+    }
   }
   else Editor.log("不进行资源分离!!!");
 
@@ -176,11 +198,15 @@ function startCopyOutRes() {
     return;
   }
 
-  let date = new Date();
-  let str = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}时${date.getMinutes()}分${date.getSeconds()}秒`;
-  let targetPath = Editor.Project.path + path.sep + "build" + path.sep + "outres" + str;
+  let targetPath = Editor.Project.path + path.sep + "build" + path.sep + "res";
 
-  if (!checkDir(targetPath)) fs.mkdirSync(targetPath);
+  if (checkDir(targetPath)) {
+    Editor.log("删除旧res文件夹");
+    deleteFile(targetPath);
+  }
+  else {
+    fs.mkdirSync(targetPath);
+  }
 
   if (!res_path) return;
 
@@ -287,7 +313,6 @@ function compressionPng(compressList) {
       } else {
         endIndex = compressList.length - 1;
       }
-
       createCompressThread(compressList, startIndex, endIndex, i);
     }
   }
@@ -300,7 +325,6 @@ function createCompressThread(list, startIndex, endIndex, i) {
 
   let index = startIndex;
   let item = list[index];
-
   let exe_cmd = cmd + ' ' + item.path;
 
   function exec() {
@@ -321,6 +345,8 @@ function createCompressThread(list, startIndex, endIndex, i) {
       } else {
         completeCount++;
         Editor.success(i + "号线程完成压缩");
+        Editor.success(completeCount);
+        Editor.success(threadCount);
         if (completeCount == threadCount) {
           Editor.success("压缩数量 " + count);
           Editor.success("压缩图集 finished!");
@@ -411,7 +437,7 @@ function deleteFile(path) {
       if (fs.statSync(curPath).isDirectory()) {
         deleteFile(curPath);
       } else {
-        fs.unlinkSync(curPath);
+        fire_fs.removeSync(curPath);
       }
     });
   }
@@ -432,7 +458,7 @@ function deleteEmptyFolder(path) {
     });
 
     if (fs.readdirSync(path).length == 0) {
-      fs.rmdirSync(path);
+      fire_fs.removeSync(path);
     }
 
   }

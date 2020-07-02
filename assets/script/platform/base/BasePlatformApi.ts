@@ -38,7 +38,7 @@ export default class BasePlatformApi {
     }
 
     // 加载广告
-    bannerShow(noSwitch: boolean = false): void {
+    bannerShow(): void {
 
     }
 

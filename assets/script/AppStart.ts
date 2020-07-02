@@ -17,9 +17,6 @@ const { ccclass, property } = cc._decorator;
 export default class AppStart extends cc.Component {
 
     @property(cc.Node)
-    MyBannerNode: cc.Node = null;
-
-    @property(cc.Node)
     rankNode: cc.Node = null;
 
     private wxSubContextView: cc.Node = null;
@@ -27,9 +24,6 @@ export default class AppStart extends cc.Component {
     onLoad(): void {
         this.adapativeWXSubView();
         if (cc.dynamicAtlasManager) cc.dynamicAtlasManager.enabled = true;
-
-        window.regVar("MyBanner", this.MyBannerNode.getComponent("MyBanner"));
-        this.MyBannerNode.zIndex = 5;
      
         PlatformManager.init();
 

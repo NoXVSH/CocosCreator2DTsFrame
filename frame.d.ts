@@ -1,9 +1,9 @@
 declare function regVar(key : string, value : any, force? : boolean);
+declare function dirRegVar(key : string, value : any, force? : boolean);
 declare function require(value : any);
 declare function log(...value : any);
 declare function errorlog(...value : any);
 declare function warnlog(...value : any);
-declare let MyBanner : any;
 declare let wx : any;
 declare let tywx : any;
 declare let wxDownloader : any;

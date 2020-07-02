@@ -27,7 +27,6 @@ export default class BannerControl {
             // } else {
             size._top = wxis.screenHeight / 2 + (winHeight / 2 - 310) * onePixel;
             // }
-            MyBanner.node.y = -500;
         } else {
             size._top = wxis.screenHeight / 2 + (1280 / 2 - 245) * onePixel;
         }
@@ -59,8 +58,6 @@ export default class BannerControl {
         // });
 
         global_banner.onError(function () {
-            MyBanner.setError();
-
             global_banner = null;
         });
     }

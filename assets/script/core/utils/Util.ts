@@ -235,22 +235,22 @@ let getTimeStr = function () {
 let log = function (...args) {
     cc.log(cc.director.getTotalFrames().toString(), getTimeStr(), ...args, "         ", getstack());
 };
-window.regVar("log", log);
+window.dirRegVar("log", log);
 
 let consolelog = function (...args) {
     console.log(cc.director.getTotalFrames().toString(), getTimeStr(), ...args, "         ", getstack());
 };
-window.regVar("consolelog", consolelog);
+window.dirRegVar("consolelog", consolelog);
 
 let warnlog = function (...args) {
     cc.warn(getTimeStr(), ...args, "     ", getstack());
 };
-window.regVar("warnlog", warnlog);
+window.dirRegVar("warnlog", warnlog);
 
 let errorlog = function (...args) {
     cc.error(getTimeStr(), ...args, "     ", getstack());
 };
-window.regVar("errorlog", errorlog);
+window.dirRegVar("errorlog", errorlog);
 
 
 //节点添加组件（如果有则返回，没有则添加）

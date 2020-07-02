@@ -1,14 +1,16 @@
 import { UILayer } from "./UILayer";
 import { EventType } from "../event/EventType";
 import EventManager from "../event/EventManager";
-import LoaderManager from "../loader/LoaderManager";;
+import LoaderManager from "../loader/LoaderManager";
+import Util from "../utils/Util";
 import ModuleManager from "../module/ModuleManager";
 import ResClearManager from "../loader/ResClearManager";
 import LoaderConst from "../loader/LoaderConst";
-import { UINameEnum } from "./UINameEnum";
+import MainView from "./MainView";
 import { ModuleName } from "../module/ModuleName";
-import ModuleBase from "../module/ModuleBase";
+import { UINameEnum } from "./UINameEnum";
 import BaseView from "./BaseView";
+import ModuleBase from "../module/ModuleBase";
 
 export interface UIInfoStruct {
     name: string;
@@ -18,6 +20,8 @@ export interface UIInfoStruct {
     maskOpacity: number;
     node: cc.Node;
     viewData: any;
+
+    gameShareIconIndex: number; //要显示的推荐组件index
 
     isCloseWhenLoad: boolean; //当加载中被调用了关闭
     isShowLoadingWhenLoad: boolean; //在加载过程中是否显示了loading界面
@@ -55,7 +59,7 @@ export default class UIManager {
 
         this.layerRecord = {}; //记录各层级显示的ui
         for (const layerName in UILayer) {
-            if (!isNaN(parseInt(layerName))) continue;
+            if (Util.Instance.strIsNum(layerName)) continue;
             this.layerRecord[UILayer[layerName]] = [];
         }
 
@@ -69,7 +73,7 @@ export default class UIManager {
     initLayer(): void {
         let node = null;
         for (const layerName in UILayer) {
-            if (!isNaN(parseInt(layerName))) continue;
+            if (Util.Instance.strIsNum(layerName)) continue;
 
             node = new cc.Node(layerName + "UI");
             this.nodeParent.addChild(node);
@@ -87,21 +91,23 @@ export default class UIManager {
 
     openUI(uiName: string, callback: Function): void {
         let uiInfo = this.uiMap[uiName];
+        uiInfo.closeTime = null;
 
         if (uiInfo.node != null) {
-            this.__openUI(uiName, callback);
-
-            if (uiInfo.layer == UILayer.Main) { //当主界面层发生变动(一个界面跳转另一个界面, 纯粹打开不会触发)时, 会关闭所有弹窗
-                let recordList = this.layerRecord[uiInfo.layer];
-                if (recordList.length == 1) {
-                    this.closeUIByLayer(UILayer.Activity);
-                    this.closeUIByLayer(UILayer.Pop);
-                }
-            }
+            this.__beforeOpenUI(uiName, callback);
         }
         else {
             this.__loadUI(uiName, callback);
         }
+    }
+
+    private __beforeOpenUI(uiName: string, callback: Function) {
+        let uiInfo = this.uiMap[uiName];
+
+        let lastUIInfo = this.getForwardUIInfoByLayer(uiInfo.layer);
+        let mainView : MainView = lastUIInfo && lastUIInfo.node.getComponent(MainView);
+        mainView && mainView.closeAnim(() => this.__openUI(uiName, callback));
+        !mainView && this.__openUI(uiName, callback);
     }
 
     private __openUI(uiName: string, callback: Function) {
@@ -113,6 +119,8 @@ export default class UIManager {
         let isSingle = uiInfo.isClosePreUI || this.checkLayerIsSingle(layer);
 
         if (!isShow) {
+            this.__checkCloseAllPopupUI(uiInfo.layer);
+
             for (let i = 0, len = recordList.length; i < len; i++) {
                 let name = recordList[i];
                 if (isSingle) this.closeUI(name);
@@ -123,6 +131,9 @@ export default class UIManager {
             }
 
             let parent = this.getUILayerParent(uiName);
+            let mainView: MainView = uiInfo.node.getComponent(MainView);
+            mainView && mainView.openAnim();
+
             uiInfo.node.active = false;
             parent.addChild(uiInfo.node);
             recordList.push(uiName);
@@ -141,13 +152,13 @@ export default class UIManager {
             callback && callback();
         }
         else {
-            errorlog(uiName + "已经打开或正在加载中!!!, 请勿重复调用开启" + uiName);
+            warnlog(uiName + "已经打开或正在加载中!!!, 请勿重复调用开启" + uiName);
         }
     }
 
     private __loadUI(uiName: string, callback: Function) {
         if (this.loadingRecord[uiName] == true) {
-            errorlog(uiName + "的预制体正在加载中!!!, 请勿重复调用开启" + uiName);
+            warnlog(uiName + "的预制体正在加载中!!!, 请勿重复调用开启" + uiName);
         }
         else if (this.prefabLoadUrls[uiName] == null) {
             let uiInfo = this.uiMap[uiName];
@@ -157,10 +168,14 @@ export default class UIManager {
             let t = this.setSmallLoadingTimeout(uiInfo);
 
             let checkLoadingOpen = () => {
+                if (!uiInfo.forbidShowSmallLoading) {
+                    EventManager.Instance.emit(EventType.HideGlobalBlock, `UILoad_${uiInfo.name}`);
+                }
+
                 t && clearTimeout(t);
                 if (uiInfo.isShowLoadingWhenLoad) {
                     uiInfo.isShowLoadingWhenLoad = false;
-                    ModuleManager.Instance.closeUI(ModuleName.Loading, UINameEnum.Loading, {key : `UILoad_${uiInfo.name}`});
+                    ModuleManager.Instance.closeUI(ModuleName.Loading, UINameEnum.SmallLoading, {key : `UILoad_${uiInfo.name}`});
                 }
             }
 
@@ -182,7 +197,7 @@ export default class UIManager {
         else {
             let res = LoaderManager.Instance.getResByUrl(this.prefabLoadUrls[uiName]);
 
-            if(res == null) { //线上存在res拿到为空 导致的报错(概率低) 未查明原因 暂时以此代码保护下
+            if (res == null) { //线上存在res拿到为空 导致的报错(概率低) 未查明原因 暂时以此代码保护下
                 LoaderManager.Instance.unload(this.prefabLoadUrls[uiName], true);
                 this.prefabLoadUrls[uiName] = null;
                 this.__loadUI(uiName, callback);
@@ -196,8 +211,10 @@ export default class UIManager {
     private setSmallLoadingTimeout(uiInfo: UIInfoStruct) {
         let func = null;
         if (!uiInfo.forbidShowSmallLoading) {
+            EventManager.Instance.emit(EventType.ShowGlobalBlock, `UILoad_${uiInfo.name}`);
+
             func = setTimeout(() => { //加载时间超过0.5秒才显示
-                ModuleManager.Instance.openUI(ModuleName.Loading, UINameEnum.Loading, {key : `UILoad_${uiInfo.name}`});
+                ModuleManager.Instance.openUI(ModuleName.Loading, UINameEnum.SmallLoading, {key : `UILoad_${uiInfo.name}`});
                 uiInfo.isShowLoadingWhenLoad = true;
             }, 500);
         }
@@ -221,13 +238,13 @@ export default class UIManager {
                 LoaderManager.Instance.load("internal/prefab/base/mask", cc.Prefab, (prefab) => {
                     this.maskPrefab = prefab;
                     createMask(this.maskPrefab);
-                })
+                });
             }
             else {
                 createMask(this.maskPrefab);
             }
         }
-
+        
         node.getComponentsInChildren(BaseView).forEach((view) => view.init(urlInfo.manager)); //注册下manager
 
         if (urlInfo.isCloseWhenLoad) { //加载过程中调用了关闭
@@ -255,30 +272,31 @@ export default class UIManager {
         if (index != -1) {
             recordList.splice(index, 1);
 
+            uiInfo.node.emit("beforeClose");
             uiInfo.node.active = false;
             uiInfo.node.removeFromParent(false); //removeFromParent 通常需要传入一个 false，否则默认会清空节点上绑定的事件和 action等。
             uiInfo.closeTime = Date.now();
 
             log(uiName + "关闭");
+
+            if (recordList.length > 0) {
+                let name = recordList[recordList.length - 1];
+                this.uiMap[name].node.active = true;
+            }
+
+            isDestroy && this.destroyUI(uiName, isUnLoad);
+
             EventManager.Instance.emit(EventType.UIClose + `_${uiName}`);
+            EventManager.Instance.emit(EventType.UIChange); //派发ui变换事件
+            ResClearManager.Instance.clearRes();
         }
         else {
             warnlog("关闭UI出错", uiInfo);
-            if (this.loadingRecord[uiName] == true) {
+            if (this.checkUIIsLoading(uiName)) {
                 warnlog(`${uiName}在加载中被调用了close`);
                 uiInfo.isCloseWhenLoad = true;
             }
         }
-
-        if (recordList.length > 0) {
-            let name = recordList[recordList.length - 1];
-            this.uiMap[name].node.active = true;
-        }
-
-        isDestroy && this.destroyUI(uiName, isUnLoad);
-
-        EventManager.Instance.emit(EventType.UIChange); //派发ui变换事件
-        ResClearManager.Instance.clearRes();
     }
 
     destroyUIWithInfo(info: UIInfoStruct, isUnLoad: boolean = false) {
@@ -304,11 +322,7 @@ export default class UIManager {
                 this.prefabLoadUrls[uiName] = null;
                 warnlog(uiName + "卸载unload");
             }
-
-            return true;
         }
-
-        return false;
     }
 
     checkUIExist(uiName: string): boolean {
@@ -345,7 +359,7 @@ export default class UIManager {
         return isLoading || recordList.indexOf(uiName) != -1;
     }
 
-    checkUIIsLoadingWithInfo(info : UIInfoStruct) {
+    checkUIIsLoadingWithInfo(info: UIInfoStruct) {
         return this.checkUIIsLoading(info.name);
     }
 
@@ -389,29 +403,56 @@ export default class UIManager {
     //关闭所有UI
     closeAllUI(isDestroy: boolean = false, isUnLoad: boolean = false): void {
         for (const key in UILayer) {
-            if (!isNaN(parseInt(key))) continue;
+            if (Util.Instance.strIsNum(key)) continue;
             this.closeUIByLayer(UILayer[key], isDestroy, isUnLoad);
         }
     }
 
     checkLayerIsSingle(layer: UILayer | string): boolean {
-        if (layer == UILayer.Activity || layer == UILayer.Tip || layer == UILayer.Load) return false;
+        if (layer == UILayer.Activity || layer == UILayer.Tip || layer == UILayer.Load || layer == UILayer.TopActivity) return false;
         else return true;
     }
 
-    clearUnuseUI() {
+    clearUnuseUI(isForce: boolean = false) {
         if (this.__isClearing) return;
 
-        this.__isClearing = true;
+        this.__isClearing = true; //防止递归调用
         for (const key in this.uiMap) {
             let uiInfo = this.uiMap[key];
-            if (uiInfo.layer == UILayer.Activity && !this.checkUIIsShowWithInfo(uiInfo) && uiInfo.closeTime != null) { //目前只处理位于activity层的界面
+            if ((uiInfo.layer == UILayer.Activity || uiInfo.layer == UILayer.TopActivity) && !this.checkUIIsShowWithInfo(uiInfo) && uiInfo.closeTime != null) { //目前只处理位于activity层的界面
                 let offset = Date.now() - uiInfo.closeTime;
-                if (offset >= LoaderConst.UIUnloadWaitTime * 1000) this.destroyUIWithInfo(uiInfo, true);
+                if (isForce || offset >= LoaderConst.UIUnloadWaitTime * 1000) this.destroyUIWithInfo(uiInfo, true);
             }
         }
 
         this.__isClearing = false;
+    }
+
+    getForwardUIInfoByLayer(layer: UILayer) {
+        let recordList = this.layerRecord[layer];
+        let forwardUI = recordList[recordList.length - 1];
+        if (forwardUI == null) return null;
+        else return this.uiMap[forwardUI];
+    }
+
+    //关闭所有业务相关弹窗界面
+    closeAllPopupUI() {
+        this.closeUIByLayer(UILayer.TopActivity);
+        this.closeUIByLayer(UILayer.Activity);
+        this.closeUIByLayer(UILayer.Pop);
+    }
+
+    //检测layer 层级是否有UI显示
+    checkLayerHadUIShow(layer: UILayer) {
+        let recordList = this.layerRecord[layer];
+        return recordList.length > 0;
+    }
+
+    private __checkCloseAllPopupUI(layer: UILayer) {
+        //当主界面层发生变动(一个界面跳转另一个界面, 纯粹打开不会触发)时, 会关闭所有弹窗
+        if (layer == UILayer.Main && this.checkLayerHadUIShow(UILayer.Main)) {
+            this.closeAllPopupUI();
+        }
     }
 }
 

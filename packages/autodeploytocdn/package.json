@@ -1,0 +1,16 @@
+{
+  "name": "autodeploytocdn",
+  "version": "0.0.1",
+  "description": "上传资源至远程资源服",
+  "author": "NoXVSH",
+  "main": "main.js",
+  "main-menu": {
+    "工具/上传资源至远程资源服--测试用 平时别乱点": {
+      "message": "autodeploytocdn:startUpload"
+    }
+  },
+  "dependencies": {
+    "compressing": "^1.5.1",
+    "ssh2-sftp-client": "^5.1.2"
+  }
+}

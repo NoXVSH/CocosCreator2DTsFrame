@@ -15,6 +15,7 @@ import BaseConfig from "../../core/config/BaseConfig";
 import PlayerDataCheck from "../../config/PlayerDataCheck";
 import BasePlatformApi from "../base/BasePlatformApi";
 import { HttpApi } from "../../core/net/HttpApi";
+import BannerControl from "./BannerControl";
 
 
 /*
@@ -585,22 +586,22 @@ export default class WxApi extends BasePlatformApi {
     }
 
     bannerInit(): void {
-        MyBanner.bannerInit();
+        BannerControl.Instance.bannerInit();
     }
 
     // 加载广告
-    bannerShow(noSwitch: boolean): void {
-        MyBanner.bannerShow(noSwitch);
+    bannerShow(): void {
+        BannerControl.Instance.bannerShow();
     }
 
     // 隐藏广告
     bannerHide(): void {
-        MyBanner.bannerHide();
+        BannerControl.Instance.bannerHide();
     }
 
     // 销毁广告
     bannerClose(): void {
-        MyBanner.bannerClose();
+        BannerControl.Instance.bannerClose();
     }
 
     // 是否请求远程配置
