@@ -17,7 +17,7 @@
   },
   "encryptJs": true,
   "excludeScenes": [
-    "ec35a411-4a75-4fd9-90fb-9116b0c82f87"
+    "464fa83b-424b-44bf-9c60-069acbe29ac7"
   ],
   "fb-instant-games": {},
   "includeSDKBox": false,
@@ -38,7 +38,7 @@
     "orientation": "portrait",
     "zip": false
   },
-  "startScene": "464fa83b-424b-44bf-9c60-069acbe29ac7",
+  "startScene": "ec35a411-4a75-4fd9-90fb-9116b0c82f87",
   "title": "IdiomTown",
   "webOrientation": "portrait",
   "wechatgame": {

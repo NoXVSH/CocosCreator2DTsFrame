@@ -1,37 +1,38 @@
-require('libs/weapp-adapter/index');
-var Parser = require('libs/xmldom/dom-parser');
-window.DOMParser = Parser.DOMParser;
-require('libs/wx-downloader.js');
-require('src/settings');
-var settings = window._CCSettings;
-require('main');
+"use strict";
 
-// Will be replaced with cocos2d-js path in editor
-// require(settings.debug ? 'cocos/cocos2d-js.js' : 'cocos/cocos2d-js-min.js');
-settings.debug ? require('cocos/cocos2d-js.js') : requirePlugin('cocos');
+require('adapter-min.js');
 
-require('./libs/engine/index.js');
+__globalAdapter.init();
+
+require('./src/settings'); // Introduce Cocos Service here
+window._CCSettings.debug ? require('cocos/cocos2d-js.js') : requirePlugin('cocos');
+
+__globalAdapter.adaptEngine();
+
+require('./main'); // TODO: move to common
+require('./ccRequire');
+// Adjust devicePixelRatio
 
 // Adjust devicePixelRatio
-cc.view._maxPixelRatio = 3;
+cc.view._maxPixelRatio = 4; // downloader polyfill
 
-wxDownloader.REMOTE_SERVER_ROOT = "https://wx-dream.sihai-inc.com/idiomTown";
-wxDownloader.SUBCONTEXT_ROOT = "";
+window.wxDownloader = remoteDownloader; // handle remote downloader
+
+remoteDownloader.REMOTE_SERVER_ROOT = "https://wx-dream.sihai-inc.com/idiomTown";
+remoteDownloader.SUBCONTEXT_ROOT = "";
 var pipeBeforeDownloader = cc.loader.subPackPipe || cc.loader.md5Pipe || cc.loader.assetLoader;
-cc.loader.insertPipeAfter(pipeBeforeDownloader, wxDownloader);
+cc.loader.insertPipeAfter(pipeBeforeDownloader, remoteDownloader);
 
-if (cc.sys.browserType === cc.sys.BROWSER_TYPE_WECHAT_GAME_SUB) {
-    var _WECHAT_SUBDOMAIN_DATA = require('src/subdomain.json.js');
-    cc.game.once(cc.game.EVENT_ENGINE_INITED, function () {
-        cc.Pipeline.Downloader.PackDownloader._doPreload("WECHAT_SUBDOMAIN", _WECHAT_SUBDOMAIN_DATA);
-    });
+if (cc.sys.platform === cc.sys.WECHAT_GAME_SUB) {
+  var SUBDOMAIN_DATA = require('src/subdomain.json.js');
 
-    require('./libs/sub-context-adapter');
-}
-else {
-    // Release Image objects after uploaded gl texture
-    cc.macro.CLEANUP_IMAGE_CACHE = false;
+  cc.game.once(cc.game.EVENT_ENGINE_INITED, function () {
+    cc.Pipeline.Downloader.PackDownloader._doPreload("SUBDOMAIN_DATA", SUBDOMAIN_DATA);
+  });
+} else {
+  // Release Image objects after uploaded gl texture
+  cc.macro.CLEANUP_IMAGE_CACHE = false;
 }
 
-wxDownloader.init();
+remoteDownloader.init();
 window.boot();
