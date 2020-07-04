@@ -3,9 +3,6 @@ import UIManager, { UIInfoStruct } from "../../core/ui/UIManager";
 import { UILayer } from "../../core/ui/UILayer";
 import { UINameEnum } from "../../core/ui/UINameEnum";
 
-const { ccclass, property } = cc._decorator;
-
-@ccclass
 export default class LoginManager extends ModuleBase {
     private mainUIInfo: UIInfoStruct;
 

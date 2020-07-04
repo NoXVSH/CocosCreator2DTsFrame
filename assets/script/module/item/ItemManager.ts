@@ -1,18 +1,15 @@
 import ModuleBase from "../../core/module/ModuleBase";
-import { PropEnum, PropMasterType } from "./PropEnum";
 import UserInfo from "../../config/UserInfo";
 import EventManager from "../../core/event/EventManager";
 import { EventType } from "../../core/event/EventType";
-import PropIconPool from "./PropIconPool";
 import ConfigManager from "../../core/config/ConfigManager";
 import { UserInfoJsonKey } from "../../config/UserInfoEnum";
+import ItemIconPool from "./ItemIconPool";
+import { ItemEnum, ItemMasterType } from "./ItemEnum";
 
-const { ccclass, property } = cc._decorator;
+export default class ItemManager extends ModuleBase {
 
-@ccclass
-export default class PropManager extends ModuleBase {
-
-    private propIconPool: PropIconPool;
+    private itemIconPool: ItemIconPool;
     private itemConfig: any;
 
     init() {
@@ -22,33 +19,33 @@ export default class PropManager extends ModuleBase {
     addEvent() {
         super.addEvent();
 
-        EventManager.Instance.on(EventType.AddProp, this.add, this);
-        EventManager.Instance.on(EventType.UseProp, this.use, this);
-        EventManager.Instance.on(EventType.GetProp, this.get, this);
-        EventManager.Instance.on(EventType.ClearProp, this.clear, this);
+        EventManager.Instance.on(EventType.AddItem, this.add, this);
+        EventManager.Instance.on(EventType.UseItem, this.use, this);
+        EventManager.Instance.on(EventType.GetItem, this.get, this);
+        EventManager.Instance.on(EventType.ClearItem, this.clear, this);
     }
 
     configLoadCompelte() {
         this.itemConfig = ConfigManager.Instance["item"];
     }
 
-    getIconSmall(type: PropEnum) {
+    getIconSmall(type: ItemEnum) {
         // let data = this.getItemData(type);
         // return this.propIconPool && this.propIconPool.getIconSmall(data.iconId);
     }
 
-    getIconBig(type: PropEnum) {
+    getIconBig(type: ItemEnum) {
         // let data = this.getItemData(type);
         // return this.propIconPool && this.propIconPool.getIconBig(data.iconId);
     }
 
-    getItemData(type: PropEnum) {
+    getItemData(type: ItemEnum) {
         return this.itemConfig[type];
     }
 
     /**
      * 增加道具
-     * @param {PropEnum} type
+     * @param {ItemEnum} type
      * @param {number} value
      */
     add(e : cc.Event.EventCustom) {
@@ -56,11 +53,11 @@ export default class PropManager extends ModuleBase {
         e.setUserData(this.__add(data.type, data.value));
     }
 
-    __add(type: PropEnum, value: number) {
+    __add(type: ItemEnum, value: number) {
         let data = this.getItemData(type);
 
         switch (data.itemType) {
-            case PropMasterType.Resource:
+            case ItemMasterType.Resource:
                 return this.alterProp(type, value);
         }
 
@@ -78,7 +75,7 @@ export default class PropManager extends ModuleBase {
         e.setUserData(this.__use(data.type, data.value));
     }
 
-    __use(type: PropEnum, value: number): boolean {
+    __use(type: ItemEnum, value: number): boolean {
         return this.alterProp(type, -value);
     }
 
@@ -90,21 +87,21 @@ export default class PropManager extends ModuleBase {
         e.setUserData(this.__clear(e.getUserData()));
     }
 
-    __clear(type: PropEnum) {
+    __clear(type: ItemEnum) {
         let data = this.getItemData(type);
-        if (data.itemType == PropMasterType.Resource) this.__use(type, this.__get(type));
+        if (data.itemType == ItemMasterType.Resource) this.__use(type, this.__get(type));
     }
 
     get(e : cc.Event.EventCustom): any {
         e.setUserData(this.__get(e.getUserData()));
     }
 
-    __get(type: PropEnum): any {
+    __get(type: ItemEnum): any {
         switch (type) {
-            case PropEnum.GOLD:
+            case ItemEnum.GOLD:
                 return UserInfo.Instance.getUserjson(UserInfoJsonKey.gold);
 
-            case PropEnum.ENERGY:
+            case ItemEnum.ENERGY:
                 return UserInfo.Instance.getUserjson(UserInfoJsonKey.energy);
 
 
@@ -114,15 +111,15 @@ export default class PropManager extends ModuleBase {
         }
     }
 
-    private alterProp(type: PropEnum, value: number): boolean {
+    private alterProp(type: ItemEnum, value: number): boolean {
         let data = this.getItemData(type);
 
-        if (data.itemType == PropMasterType.Resource) {
+        if (data.itemType == ItemMasterType.Resource) {
             switch (type) {
-                case PropEnum.GOLD:
+                case ItemEnum.GOLD:
                     return this.alterGold(value);
 
-                case PropEnum.ENERGY:
+                case ItemEnum.ENERGY:
                     return this.alterEnergy(value);
 
                 default:
@@ -152,7 +149,7 @@ export default class PropManager extends ModuleBase {
     }
 
     private alterEnergy(value: number): boolean {
-        let lastVal = this.__get(PropEnum.ENERGY);
+        let lastVal = this.__get(ItemEnum.ENERGY);
         let nowEnergy = lastVal + value;
         if (nowEnergy < 0) {
 

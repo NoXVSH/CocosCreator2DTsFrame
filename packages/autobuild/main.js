@@ -11,29 +11,12 @@ var beforeBuildFinishCallBack = null;
 
 let unCompressArray = [ //这边type 一律都是sprite-frame
   ['db://assets/source/texture/background/**/*', 'sprite-frame'],  
-  ['db://assets/source/texture/special/**/*', 'sprite-frame'],  
-  ['db://assets/source_remote/texture/background/**/*', 'sprite-frame'],  
-  ['db://assets/source_remote/texture/special/**/*', 'sprite-frame'],  
-  ['db://assets/resources/texture/unit/**/*', 'sprite-frame'], 
+  ['db://assets/source_remote/texture/background/**/*', 'sprite-frame'],   
 ];
 
 let moveToOutArray = [
-  ['db://assets/source_remote/**/*'],  
-
-  ['db://assets/resources/mp3/out/*'],  
-  ['db://assets/resources/config/out/**/*'],  
-  ['db://assets/resources/fnt/out/**/*'], 
-
-  ['db://assets/resources/texture/build/**/*'], 
-  ['db://assets/resources/texture/unit/**/*'], 
-  ['db://assets/resources/texture/godcard/**/*'], 
-  ['db://assets/resources/texture/prop/**/*'], 
-  ['db://assets/resources/texture/story/**/*'], 
-  ['db://assets/resources/texture/pet/**/*'], 
-  ['db://assets/resources/texture/randomquest/**/*'], 
-  ['db://assets/resources/texture/qualityframe/**/*'],
-
-  ['db://assets/resources/prefab_remote/**/*'], 
+  ['db://assets/source_remote/**/*'], 
+  ['db://assets/resources/remote/**/*'], 
 ];
 
 function onBuildStart(options, callback) {

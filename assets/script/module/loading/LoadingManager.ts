@@ -3,9 +3,6 @@ import ModuleBase from "../../core/module/ModuleBase";
 import UIManager, { UIInfoStruct } from "../../core/ui/UIManager";
 import { UINameEnum } from "../../core/ui/UINameEnum";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class LoadingManager extends ModuleBase {
     private smallLoadingUIInfo : UIInfoStruct
     private loadingUIInfo: UIInfoStruct;

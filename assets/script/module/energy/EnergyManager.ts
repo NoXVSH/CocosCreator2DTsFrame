@@ -3,13 +3,11 @@ import EventManager from "../../core/event/EventManager";
 import { EventType } from "../../core/event/EventType";
 import UserInfo from "../../config/UserInfo";
 import EnergyConst from "./const/EnergyConst";
-import {PropEnum} from "../prop/PropEnum";
 import { UserInfoJsonKey } from "../../config/UserInfoEnum";
+import { ItemEnum } from "../item/ItemEnum";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class EnergyManager extends ModuleBase {
+    private com : cc.Component = new cc.Node().addComponent(cc.Component);
 
     beforeEnterHome() {
         this.initInfo();
@@ -20,7 +18,7 @@ export default class EnergyManager extends ModuleBase {
     }
 
     initInfo() {
-        this.unscheduleAllCallbacks();
+        this.com.unscheduleAllCallbacks();
         
         let recoverTime = UserInfo.Instance.getUserjson(UserInfoJsonKey.energyRecoverTime);
         let nowTime = parseInt((Date.now() / 1000) + "");
@@ -29,7 +27,7 @@ export default class EnergyManager extends ModuleBase {
         if (offsetTime < 0) {
             let tempTime = -offsetTime;
             let value = Math.ceil(tempTime / EnergyConst.recoverTimer);
-            let energy = EventManager.Instance.dispatchGet(EventType.GetProp, PropEnum.ENERGY);
+            let energy = EventManager.Instance.dispatchGet(EventType.GetItem, ItemEnum.ENERGY);
 
             if (energy >= EnergyConst.maxEnergy) {
                 this.emit("updateEnergyInfo");
@@ -46,7 +44,7 @@ export default class EnergyManager extends ModuleBase {
             warnlog("LOGIN--- 时间够   " + offsetTime);
         }
         else {
-            this.scheduleOnce(() => {
+            this.com.scheduleOnce(() => {
                 this.__addEnergy(1);
             }, offsetTime + 1);
 
@@ -57,19 +55,19 @@ export default class EnergyManager extends ModuleBase {
     }
 
     energyAdd() {
-        let energy = EventManager.Instance.dispatchGet(EventType.GetProp, PropEnum.ENERGY);
+        let energy = EventManager.Instance.dispatchGet(EventType.GetItem, ItemEnum.ENERGY);
 
         if (energy >= EnergyConst.maxEnergy) {
             this.emit("updateEnergyInfo");
             return;
         }
 
-        this.unscheduleAllCallbacks();
+        this.com.unscheduleAllCallbacks();
 
         let recoverTime = parseInt((Date.now() / 1000 + EnergyConst.recoverTimer) + "");
         UserInfo.Instance.setUserjson(UserInfoJsonKey.energyRecoverTime, recoverTime);
 
-        this.scheduleOnce(() => {
+        this.com.scheduleOnce(() => {
             this.__addEnergy(1);
         }, EnergyConst.recoverTimer + 1);
 
@@ -77,8 +75,8 @@ export default class EnergyManager extends ModuleBase {
     }
 
     energySendAdd() {
-        let energy = EventManager.Instance.dispatchGet(EventType.GetProp, PropEnum.ENERGY);
-        energy >= EnergyConst.maxEnergy && this.unscheduleAllCallbacks();
+        let energy = EventManager.Instance.dispatchGet(EventType.GetItem, ItemEnum.ENERGY);
+        energy >= EnergyConst.maxEnergy && this.com.unscheduleAllCallbacks();
 
         this.emit("updateEnergyInfo");
     }
@@ -90,7 +88,7 @@ export default class EnergyManager extends ModuleBase {
     }
 
     __addEnergy(addValue) { //外部切记勿调用
-        EventManager.Instance.requestOperate(EventType.AddProp, {type : PropEnum.ENERGY, value : addValue});
+        EventManager.Instance.requestOperate(EventType.AddItem, {type : ItemEnum.ENERGY, value : addValue});
         this.energyAdd();
     }
 

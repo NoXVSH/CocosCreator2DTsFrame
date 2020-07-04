@@ -46,10 +46,10 @@ export enum EventType {
 
     //道具使用
     ItemUse = "ItemUse",
-    AddProp = "AddProp",
-    UseProp = "UseProp",
-    GetProp = "GetProp",
-    ClearProp = "ClearProp",
+    AddItem = "AddProp",
+    UseItem = "UseProp",
+    GetItem = "GetProp",
+    ClearItem = "ClearProp",
 
     PlatformUserInfoGet = "PlatformUserInfoGet", //平台用户信息成功获取
 

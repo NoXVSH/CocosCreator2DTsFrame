@@ -5,10 +5,7 @@ import { EventType } from "../event/EventType";
 import { UINameEnum } from "../ui/UINameEnum";
 import UIManager, { UIInfoStruct } from "../ui/UIManager";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
-export default class ModuleBase extends cc.Component { //模块管理器基类
+export default class ModuleBase { //模块管理器基类
     private eventHanlder : EventHandler = new EventHandler();
     private modelMap : {[key : string] : ModelBase} = {};
     private uiOpenFuncMap: {[key : string] : Function} = {};

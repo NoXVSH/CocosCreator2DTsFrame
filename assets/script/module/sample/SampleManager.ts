@@ -4,9 +4,6 @@ import SampleModel from "./model/SampleModel";
 import { UINameEnum } from "../../core/ui/UINameEnum";
 import { UILayer } from "../../core/ui/UILayer";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class SampleManager extends ModuleBase {
     private sampleActivity1UIInfo : UIInfoStruct;
     private sampleActivity2UIInfo : UIInfoStruct;

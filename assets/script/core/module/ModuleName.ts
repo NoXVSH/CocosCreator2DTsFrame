@@ -5,7 +5,7 @@ export enum ModuleName {
     Banner = "Banner", //banner控制
     Login = "Login",
     Energy = "Energy",
-    Prop = "Prop", //道具
+    Item = "Item", //道具
     Time = "Time", //时间 
     Sample = "Sample", //示例
 }

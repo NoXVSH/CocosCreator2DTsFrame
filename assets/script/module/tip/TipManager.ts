@@ -5,9 +5,6 @@ import EventManager from "../../core/event/EventManager";
 import { EventType } from "../../core/event/EventType";
 import { UINameEnum } from "../../core/ui/UINameEnum";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class TipManager extends ModuleBase {
 
     private mainUIInfo : UIInfoStruct;

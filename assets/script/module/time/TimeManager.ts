@@ -6,9 +6,6 @@ import UserInfo from "../../config/UserInfo";
 import MyGlobal from "../../config/MyGlobal";
 import { UserInfoJsonKey } from "../../config/UserInfoEnum";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class TimeManager extends ModuleBase {
     // 当前时间/s
     private nowTimestamp: number;

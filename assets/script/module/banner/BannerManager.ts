@@ -5,9 +5,6 @@ import ModuleBase from "../../core/module/ModuleBase";
 import EventManager from "../../core/event/EventManager";
 import UIManager from "../../core/ui/UIManager";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class BannerManager extends ModuleBase {
 
     init() : void {
