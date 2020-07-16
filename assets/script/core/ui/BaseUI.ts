@@ -3,33 +3,33 @@ export default class BaseUI extends cc.Component {
     
     onLoad() {
         this.addStaticEvent();
-        this.loadInit();
+        this.viewLoad();
     }
     
-    loadInit() {
+    viewLoad() {
         
     }
 
     onEnable() {
         this.addEvent();
-        this.enableInit();
+        this.viewEnable();
         this.showAnimation();
     }
 
-    enableInit() {
+    viewEnable() {
 
     }
 
     onDisable() {
-        this.disableInit();
+        this.viewDisable();
         this.removeEvent();
     }
 
-    disableInit() {
+    viewDisable() {
 
     }
 
-    onDestroy() {
+    viewDestroy() {
         this.removeStaticEvent();
     }
 

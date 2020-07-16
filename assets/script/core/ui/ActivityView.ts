@@ -26,14 +26,10 @@ export default class ActivityView extends BaseView {
         }
     }
 
-    onDisable() {
+    viewDisable() {
         if(this.isAniming) { //如果在播放动画时候被强行关闭 要释放下全局遮挡
             EventManager.Instance.emit(EventType.HideGlobalBlock, "ActivityViewOpenAnim" + this.node.name);
         }
-
-        this.disableInit();
-        this.removeEvent();
     }
-
 
 }

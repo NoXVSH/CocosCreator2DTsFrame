@@ -3,6 +3,8 @@ import { EventType } from "../../../core/event/EventType";
 import BaseView from "../../../core/ui/BaseView";
 import ModuleManager from "../../../core/module/ModuleManager";
 import UserInfo from "../../../config/UserInfo";
+import { ModuleName } from "../../../core/module/ModuleName";
+import { UINameEnum } from "../../../core/ui/UINameEnum";
 
 const {ccclass, property} = cc._decorator;
 
@@ -47,7 +49,7 @@ export default class LoadingView extends BaseView {
         this.userId.string = `userid: ${UserInfo.Instance.GetUserId()}`;
     }
 
-    loadInit() {
+    viewLoad() {
         if(CC_PREVIEW) this.rate = 100000;
 
         this.dotTxt.string = "";
@@ -121,6 +123,9 @@ export default class LoadingView extends BaseView {
     }
 
     close() : void {
-        ModuleManager.Instance.Loading.close(this.isUnload, this.isUnload);
+        ModuleManager.Instance.closeUI(ModuleName.Loading, UINameEnum.Loading, {
+            isUnload : this.isUnload,
+            isDestroy : this.isUnload,
+        });
     }
 }
