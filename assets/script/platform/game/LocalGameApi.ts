@@ -62,7 +62,7 @@ export default class LocalGameApi extends BasePlatformApi {
         ModuleManager.Instance.openUI(ModuleName.MessageBox, UINameEnum.MessageBox, {
             desc : info.content,
             successCb : () => successCb && successCb(),
-            cancelCb : () => cancelCb && cancelCb,
+            cancelCb : () => cancelCb && cancelCb(),
         });
     }
 
