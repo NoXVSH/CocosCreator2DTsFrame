@@ -59,11 +59,11 @@ export default class GamePreload {
             EventManager.Instance.emit(EventType.ConfigLoadComplete);
             return this.loadResAsync(preLoadList, progressCb);
         })
-        .then(() => {
-            log("预加载游戏资源完成");
-            log("开始加载远程资源assetbundle");
-            return LoaderManager.Instance.loadBundlePromise(BundleName.RemoteRes);
-        })
+        // .then(() => {
+        //     log("预加载游戏资源完成");
+        //     log("开始加载远程资源assetbundle");
+        //     return LoaderManager.Instance.loadBundlePromise(BundleName.RemoteRes);
+        // })
         .then(() => {
             this.clearLoadTimeout();
             completeCb && completeCb();

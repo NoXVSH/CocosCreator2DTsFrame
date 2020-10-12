@@ -21,23 +21,23 @@ export default class LoaderManager {
         this.bundlesMap[BundleName.LocalRes] = bundleLoader;
     }
     
-    load(url: string, bundleName : BundleName, type: typeof cc.Asset | string, callback: Function, errorback?: Function) {
-        let bundleLoader = this.getBundleLoader(bundleName);
+    async load(url: string, bundleName : BundleName, type: typeof cc.Asset | string, callback: Function, errorback?: Function) {
+        let bundleLoader = await this.getBundleLoader(bundleName);
         bundleLoader.load(url, type, callback, errorback);
     }
 
-    unload(url: string, bundleName : BundleName) {
-        let bundleLoader = this.getBundleLoader(bundleName);
+    async unload(url: string, bundleName : BundleName) {
+        let bundleLoader = await this.getBundleLoader(bundleName);
         bundleLoader.unload(url);
     }
 
-    silentLoad(url: string, bundleName : BundleName, type: typeof cc.Asset | string, callback?: Function): void  {
-        let bundleLoader = this.getBundleLoader(bundleName);
+    async silentLoad(url: string, bundleName : BundleName, type: typeof cc.Asset | string, callback?: Function) {
+        let bundleLoader = await this.getBundleLoader(bundleName);
         bundleLoader.silentLoad(url, type, callback);
     }
 
-    preload(url: string, bundleName : BundleName, type: typeof cc.Asset | string) {
-        let bundleLoader = this.getBundleLoader(bundleName);
+    async preload(url: string, bundleName : BundleName, type: typeof cc.Asset | string) {
+        let bundleLoader = await this.getBundleLoader(bundleName);
         bundleLoader.preload(url, type);
     }
 
@@ -55,22 +55,25 @@ export default class LoaderManager {
                 return;
             }
 
+            log(`assetbunle  ${bundleName}加载完成`);
             let bundleLoader = new AssetBundleLoader(bundle);
             this.bundlesMap[bundleName] = bundleLoader;
-            cb && cb();
+            cb && cb(bundleLoader);
         });
     }
 
-    loadBundlePromise(bundleName : BundleName) {
-        let p = new Promise((resolve, reject) => {
+    loadBundlePromise(bundleName : BundleName) : Promise<AssetBundleLoader> {
+        let p = new Promise<AssetBundleLoader>((resolve, reject) => {
             this.loadBundle(bundleName, resolve, reject);
         });
         return p;
     }
 
-    getBundleLoader(bundleName : BundleName) : AssetBundleLoader {
+    async getBundleLoader(bundleName : BundleName) {
         let bundleLoader = this.bundlesMap[bundleName];
-        if(!bundleLoader) errorlog(`获取AssetBundleLoader ${bundleName}失败`);
+        if(bundleLoader) return bundleLoader;
+
+        bundleLoader = await this.loadBundlePromise(bundleName);
         return bundleLoader;
     }
 
