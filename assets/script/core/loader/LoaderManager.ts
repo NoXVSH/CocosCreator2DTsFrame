@@ -22,22 +22,22 @@ export default class LoaderManager {
     }
     
     async load(url: string, bundleName : BundleName, type: typeof cc.Asset | string, callback: Function, errorback?: Function) {
-        let bundleLoader = await this.getBundleLoader(bundleName);
+        let bundleLoader = await this.__getBundleLoader(bundleName);
         bundleLoader.load(url, type, callback, errorback);
     }
 
     async unload(url: string, bundleName : BundleName) {
-        let bundleLoader = await this.getBundleLoader(bundleName);
+        let bundleLoader = await this.__getBundleLoader(bundleName);
         bundleLoader.unload(url);
     }
 
     async silentLoad(url: string, bundleName : BundleName, type: typeof cc.Asset | string, callback?: Function) {
-        let bundleLoader = await this.getBundleLoader(bundleName);
+        let bundleLoader = await this.__getBundleLoader(bundleName);
         bundleLoader.silentLoad(url, type, callback);
     }
 
     async preload(url: string, bundleName : BundleName, type: typeof cc.Asset | string) {
-        let bundleLoader = await this.getBundleLoader(bundleName);
+        let bundleLoader = await this.__getBundleLoader(bundleName);
         bundleLoader.preload(url, type);
     }
 
@@ -69,7 +69,7 @@ export default class LoaderManager {
         return p;
     }
 
-    async getBundleLoader(bundleName : BundleName) {
+    private async __getBundleLoader(bundleName : BundleName) {
         let bundleLoader = this.bundlesMap[bundleName];
         if(bundleLoader) return bundleLoader;
 
@@ -77,13 +77,23 @@ export default class LoaderManager {
         return bundleLoader;
     }
 
-    checkResIsLoad(url : string, bundleName : BundleName) {
+    getBundleLoader(bundleName : BundleName) {
         let bundleLoader = this.bundlesMap[bundleName];
+        if(bundleLoader) return bundleLoader;
+
+        errorlog(`获取assetbundle ${bundleName}失败`);
+        return null;
+    }
+
+    checkResIsLoad(url : string, bundleName : BundleName) {
+        let bundleLoader = this.getBundleLoader(bundleName);
+        if(!bundleLoader) return false;
         return bundleLoader.checkResIsLoad(url);
     }
 
     getResByUrl(url : string, bundleName : BundleName) {
-        let bundleLoader = this.bundlesMap[bundleName];
+        let bundleLoader = this.getBundleLoader(bundleName);
+        if(!bundleLoader) return null;
         return bundleLoader.getResByUrl(url);
     }
 
