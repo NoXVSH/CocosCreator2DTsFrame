@@ -1,4 +1,5 @@
 import ShaderEffectBase from "../ShaderEffectBase";
+import { BundleName } from "../../core/loader/LoaderConst";
 
 const { ccclass, property } = cc._decorator;
 
@@ -9,7 +10,8 @@ enum Mode {
 
 @ccclass
 export default class SingleColorEffect extends ShaderEffectBase {
-    materialUrl: string = "internal/material/flasheffectmaterial";
+    materialUrl: string = "material/flasheffectmaterial";
+    bundleName : BundleName = BundleName.RemoteRes;
 
     @property(cc.Float)
     flashWidth: number = 0.15;

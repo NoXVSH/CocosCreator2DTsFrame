@@ -1,5 +1,6 @@
 import LoaderManager from "../../core/loader/LoaderManager";
 import ShaderEffectBase from "../ShaderEffectBase";
+import { BundleName } from "../../core/loader/LoaderConst";
 
 const { ccclass, property } = cc._decorator;
 
@@ -8,7 +9,8 @@ export default class GrayToOriginEffect extends ShaderEffectBase {
     @property(cc.Float)
     duration = 1.0;
 
-    materialUrl: string = "internal/material/graytooriginmaterial";
+    materialUrl: string = "material/graytooriginmaterial";
+    bundleName : BundleName = BundleName.RemoteRes;
 
     update(dt) {
         if (this.usingMaterial) {

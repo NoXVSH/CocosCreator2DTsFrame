@@ -10,6 +10,7 @@ import UserInfo from "./config/UserInfo";
 import BaseConfig from "./core/config/BaseConfig";
 import GamePreload from "./module/loading/GamePreload";
 import ResClearManager from "./core/loader/ResClearManager";
+import LoaderManager from "./core/loader/LoaderManager";
 
 const { ccclass, property } = cc._decorator;
 
@@ -24,7 +25,8 @@ export default class AppStart extends cc.Component {
     onLoad(): void {
         this.adapativeWXSubView();
         if (cc.dynamicAtlasManager) cc.dynamicAtlasManager.enabled = true;
-     
+        
+        LoaderManager.Instance.init();
         PlatformManager.init();
 
         MyGlobal.Instance.init();
@@ -75,7 +77,7 @@ export default class AppStart extends cc.Component {
     }
 
     memoryDanger() {
-        ResClearManager.Instance.clearRes(true, true);
+        ResClearManager.Instance.clearRes(true);
     }
 
 }

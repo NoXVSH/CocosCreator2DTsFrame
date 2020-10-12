@@ -292,7 +292,7 @@
       "array": [
         0,
         0,
-        536.9357503463519,
+        535.2036995387831,
         0,
         0,
         0,
@@ -719,7 +719,7 @@
     "_id": "f8pMWvGQVEQZ3hEDJSu8PW"
   },
   {
-    "__type__": "cc.WXSubContextView",
+    "__type__": "cc.SubContextView",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -882,6 +882,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "--",
     "_N$string": "--",
@@ -1013,6 +1015,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "debugInfo",
     "_N$string": "debugInfo",
@@ -1105,7 +1109,6 @@
     },
     "_resize": 1,
     "_N$layoutType": 2,
-    "_N$padding": 0,
     "_N$cellSize": {
       "__type__": "cc.Size",
       "width": 40,

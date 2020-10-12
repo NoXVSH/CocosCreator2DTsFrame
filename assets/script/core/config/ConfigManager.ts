@@ -1,4 +1,5 @@
 import LoaderManager from "../loader/LoaderManager";
+import { BundleName } from "../loader/LoaderConst";
 
 let pako_Inflate = require("../../plugins/pako_inflate");
 
@@ -32,7 +33,7 @@ export default class ConfigManager {
     private loadGameData(): Promise<any> {
         let p = new Promise<any>((resolve, reject) => {
             log("开始加载游戏配置表");
-            LoaderManager.Instance.load("internal/config/data", cc.BufferAsset, (res) => {
+            LoaderManager.Instance.load("config/data", BundleName.LocalRes, cc.BufferAsset, (res) => {
                 this.analyData(res._nativeAsset);
                 resolve();
             });

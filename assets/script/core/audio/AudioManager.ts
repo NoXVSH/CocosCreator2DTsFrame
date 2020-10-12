@@ -1,5 +1,6 @@
 import LoaderManager from "../loader/LoaderManager";
 import MyGlobal from "../../config/MyGlobal";
+import { BundleName } from "../loader/LoaderConst";
 
 
 export enum AUDIO_TYPE{
@@ -10,6 +11,7 @@ export enum AUDIO_TYPE{
 export interface AudioPlayData {
     type : AUDIO_TYPE,
     url : string,
+    bundleName : BundleName,
     loop : boolean,
     volume : number,
 }
@@ -25,7 +27,7 @@ export default class AudioManager {
         return this._instance;
     }
 
-    private _effectMap: {[key : number] : {url : string, id : number | boolean}} = {}; //音效映射， key对应的数值，true表示正在启动中，否则对应audioId
+    private _effectMap: {[key : number] : {url : string, bundleName : BundleName, id : number | boolean}} = {}; //音效映射， key对应的数值，true表示正在启动中，否则对应audioId
     private _effKeyTick: number = 0;  //递增key
     private _musicLoadUrl : string = null;
     private _musicSwitch : boolean = false;
@@ -33,13 +35,13 @@ export default class AudioManager {
     private _musicData : AudioPlayData = null;
     private _musicUrl : string = null;
 
-    public loadAudio(url : string, type : AUDIO_TYPE, callback : Function) : void {
+    public loadAudio(url : string, bundleName : BundleName, type : AUDIO_TYPE, callback : Function) : void {
         url = "mp3/" + url;
         
         let errorback = () => {
-            LoaderManager.Instance.unload(url);
+            LoaderManager.Instance.unload(url, bundleName);
         }
-        LoaderManager.Instance.load(url, cc.AudioClip, callback, errorback);
+        LoaderManager.Instance.load(url, bundleName, cc.AudioClip, callback, errorback);
 
         if (type == AUDIO_TYPE.SOUND_MUSIC) {
             this._musicLoadUrl = url;
@@ -53,7 +55,7 @@ export default class AudioManager {
                 const state = cc.audioEngine.getState(data.id as number);
                 // log(state);
                 if (state != cc.audioEngine.AudioState.PLAYING) {
-                    LoaderManager.Instance.unload(data.url);
+                    LoaderManager.Instance.unload(data.url, data.bundleName);
                     delete this._effectMap[key];
                 }
             }
@@ -73,7 +75,7 @@ export default class AudioManager {
                 }
 
                 this._musicUrl = data.url;
-                this.loadAudio(data.url, data.type, function (clip) {
+                this.loadAudio(data.url, data.bundleName, data.type, function (clip) {
                     cc.audioEngine.playMusic(
                         clip,
                         data.loop
@@ -85,9 +87,9 @@ export default class AudioManager {
         } else if (data.type == AUDIO_TYPE.SOUND_EFFECT) {
             if (this._effectSwitch) {
                 let key = this._effKeyTick++;
-                this._effectMap[key] = { url: "mp3/" + data.url, id: true };
+                this._effectMap[key] = { url: "mp3/" + data.url, id: true, bundleName : data.bundleName };
 
-                this.loadAudio(data.url, data.type, function (clip) {
+                this.loadAudio(data.url, data.bundleName, data.type, function (clip) {
                     if (!this._effectSwitch) return;
                     if (!this._effectMap[key]) return; //已经在外部停掉了
                     this._effectMap[key].id = cc.audioEngine.playEffect(clip, data.loop);

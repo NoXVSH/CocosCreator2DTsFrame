@@ -5,7 +5,7 @@ import LoaderManager from "../loader/LoaderManager";
 import Util from "../utils/Util";
 import ModuleManager from "../module/ModuleManager";
 import ResClearManager from "../loader/ResClearManager";
-import LoaderConst from "../loader/LoaderConst";
+import LoaderConst, { BundleName } from "../loader/LoaderConst";
 import MainView from "./MainView";
 import { ModuleName } from "../module/ModuleName";
 import { UINameEnum } from "./UINameEnum";
@@ -14,6 +14,7 @@ import ModuleBase from "../module/ModuleBase";
 
 export interface UIInfoStruct {
     name: string;
+    bundleName : BundleName;
     layer: UILayer;
     showBanner: boolean;
     showMask: boolean;
@@ -181,13 +182,13 @@ export default class UIManager {
 
             let errorback = () => {
                 this.loadingRecord[uiName] = false;
-                LoaderManager.Instance.unload(this.prefabLoadUrls[uiName], true);
+                LoaderManager.Instance.unload(this.prefabLoadUrls[uiName], uiInfo.bundleName);
                 this.prefabLoadUrls[uiName] = null;
                 checkLoadingOpen();
                 EventManager.Instance.emit(EventType.TipShow, { str: "网络不稳定, 请检查网络后重试" });
             }
 
-            LoaderManager.Instance.load(uiName, cc.Prefab, (res) => {
+            LoaderManager.Instance.load(uiName, uiInfo.bundleName, cc.Prefab, (res) => {
                 this.loadingRecord[uiName] = false;
                 checkLoadingOpen();
                 this.createNodeAndOpen(uiName, res, callback);
@@ -195,10 +196,11 @@ export default class UIManager {
 
         }
         else {
-            let res = LoaderManager.Instance.getResByUrl(this.prefabLoadUrls[uiName]);
+            let uiInfo = this.uiMap[uiName];
+            let res = LoaderManager.Instance.getResByUrl(this.prefabLoadUrls[uiName], uiInfo.bundleName) as cc.Prefab;
 
             if (res == null) { //线上存在res拿到为空 导致的报错(概率低) 未查明原因 暂时以此代码保护下
-                LoaderManager.Instance.unload(this.prefabLoadUrls[uiName], true);
+                LoaderManager.Instance.unload(this.prefabLoadUrls[uiName], uiInfo.bundleName);
                 this.prefabLoadUrls[uiName] = null;
                 this.__loadUI(uiName, callback);
                 return;
@@ -235,7 +237,7 @@ export default class UIManager {
 
         if (urlInfo.showMask) {
             if (this.maskPrefab == null) {
-                LoaderManager.Instance.load("internal/prefab/base/mask", cc.Prefab, (prefab) => {
+                LoaderManager.Instance.load("prefab/base/mask", BundleName.LocalRes, cc.Prefab, (prefab) => {
                     this.maskPrefab = prefab;
                     createMask(this.maskPrefab);
                 });
@@ -318,7 +320,7 @@ export default class UIManager {
             warnlog(uiName + "销毁");
 
             if (isUnLoad) {
-                LoaderManager.Instance.unload(this.prefabLoadUrls[uiName], true);
+                LoaderManager.Instance.unload(this.prefabLoadUrls[uiName], uiInfo.bundleName);
                 this.prefabLoadUrls[uiName] = null;
                 warnlog(uiName + "卸载unload");
             }

@@ -1,10 +1,12 @@
 import PoolManager from "../loader/PoolManager";
+import { BundleName } from "../loader/LoaderConst";
 
 
 export interface DynamicEffectStruct {
     x: number;
     y: number;
     url: string;
+    bundleName : BundleName;
     targetNode: cc.Node;
     scriptName: string;
     useAction: boolean;
@@ -74,7 +76,7 @@ export default class DynamicEffectManager {
 
         this.dynamicEffectMap[info.tick] = info;
 
-        PoolManager.Instance.get(info.url, cc.Prefab, callback);
+        PoolManager.Instance.get(info.url, info.bundleName, cc.Prefab, callback);
         return this.effectTick++;
     }
 

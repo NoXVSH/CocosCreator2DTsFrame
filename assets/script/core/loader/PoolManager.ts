@@ -1,4 +1,5 @@
 import LoaderManager from "./LoaderManager";
+import { BundleName } from "./LoaderConst";
 
 export default class PoolManager {
     private static _instance : PoolManager;
@@ -14,18 +15,18 @@ export default class PoolManager {
     private pool : {[key : string] : cc.NodePool} = {}; 
     private loadRecord : {[key : string] : number} = {};
 
-    getPromise(url : string, type : typeof cc.Asset) : Promise<any> {
+    getPromise(url : string, bundleName : BundleName, type : typeof cc.Asset) : Promise<any> {
         let p = new Promise((resolve, reject) => {
-            this.get(url, type, resolve);
+            this.get(url, bundleName, type, resolve);
         });
         return p;
     }
 
-    get(url : string, type : typeof cc.Asset, callback : Function) : void {
+    get(url : string, bundleName : BundleName, type : typeof cc.Asset, callback : Function) : void {
         let pool = this.pool[url];
 
         if (pool == null || pool.size() == 0) {
-            this.load(url, type, callback);
+            this.load(url, bundleName, type, callback);
         }
         else {
             let obj = pool.get();
@@ -56,24 +57,18 @@ export default class PoolManager {
         }
     }
 
-    unload(url : string) : void {
+    unload(url : string, bundleName : BundleName) : void {
         this.clear(url);
         let count = this.loadRecord[url];
         while (count > 0) {
-            LoaderManager.Instance.unload(url);
+            LoaderManager.Instance.unload(url, bundleName);
             count--;
         }
 
         delete this.loadRecord[url];
     }
 
-    unloadAll() : void {
-        for (const url in this.loadRecord) {
-            this.unload(url);
-        }
-    }
-
-    load(url : string, type : typeof cc.Asset, callback : Function) : void {
+    private load(url : string, bundleName : BundleName, type : typeof cc.Asset, callback : Function) : void {
         if (this.loadRecord[url] == null) this.loadRecord[url] = 0;
         this.loadRecord[url]++;
 
@@ -81,7 +76,7 @@ export default class PoolManager {
             callback(cc.instantiate(res));
         }
 
-        LoaderManager.Instance.load(url, type, cb);
+        LoaderManager.Instance.load(url, bundleName, type, cb);
     }
 }
 

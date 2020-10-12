@@ -1,9 +1,11 @@
-import LoaderConst from "./LoaderConst";
+import LoaderConst, { BundleName } from "./LoaderConst";
 import { LoadErrorEnum } from "./LoadErrorEnum";
 
 export interface QueueLoaderItem {
     url: string;
     type: string | typeof cc.Asset;
+    bundleName : BundleName;
+    loader : QueueLoaderInterface
     callback: Function;
     errorback: Function;
     isLoading : boolean;
@@ -13,7 +15,7 @@ export interface QueueLoaderItem {
 
 export interface QueueLoaderInterface {
     load : (url: string, type: string | typeof cc.Asset, callback: Function, errorback?: Function) => void;
-    unload : (url : string, force : boolean) => void;
+    unload : (url : string) => void;
 }
 
 export default class QueueLoaderBase {
@@ -23,19 +25,6 @@ export default class QueueLoaderBase {
     queueLoader : QueueLoaderInterface;
 
     tick : number = 0;
-
-    load(url: string, type: string | typeof cc.Asset, callback: Function, errorback?: Function) {
-        let tick = this.tick++;
-
-        let queueItem: QueueLoaderItem = {
-            url: url, type: type, callback: callback, errorback: errorback, isLoading : false, timeOutTick : null, tick : tick
-        };
-
-        this.waitList.push(queueItem);
-        this.checkLoadList();
-
-        return tick;
-    }
 
     checkLoadList() {
         if (this.loadingCount >= LoaderConst.MaxLoadingCount) return;
@@ -53,7 +42,7 @@ export default class QueueLoaderBase {
     __load(queueItem : QueueLoaderItem) {
         this.changeLoadingCount(true);
         queueItem.isLoading = true;
-        this.queueLoader.load(queueItem.url, queueItem.type,
+        queueItem.loader.load(queueItem.url, queueItem.type,
             (resource) => {
                 this.changeLoadingCount(false);
                 queueItem.isLoading = false;
@@ -74,12 +63,12 @@ export default class QueueLoaderBase {
         this.checkLoadList();
     }
 
-    unload(tick : number, force : boolean = false) {
+    unload(tick : number) {
         //先检测waitlist 在检测loadlist 保证队列的特性
         for(let i = this.waitList.length - 1; i >= 0; i--) {
             let item = this.waitList[i];
             if(item.tick == tick) {
-                this.__unload(item.url, force);
+                this.__unload(item);
                 this.waitList.splice(i, 1);
                 return;
             }
@@ -89,7 +78,7 @@ export default class QueueLoaderBase {
             let item = this.loadList[i];
             if(item.tick == tick) {
                 if(!this.__clearTimeout(item)) {
-                    this.__unload(item.url, force);
+                    this.__unload(item);
                     if(item.isLoading) this.changeLoadingCount(false);
                 }
                 this.loadList.splice(i, 1);
@@ -109,8 +98,8 @@ export default class QueueLoaderBase {
         return false;
     }
 
-    __unload(url : string, force : boolean) {
-        this.queueLoader.unload(url, force);
+    __unload(item : QueueLoaderItem) {
+        item.loader.unload(item.url);
     }
 
 }

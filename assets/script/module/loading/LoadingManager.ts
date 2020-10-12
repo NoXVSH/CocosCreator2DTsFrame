@@ -2,6 +2,7 @@ import { UILayer } from "../../core/ui/UILayer";
 import ModuleBase from "../../core/module/ModuleBase";
 import UIManager, { UIInfoStruct } from "../../core/ui/UIManager";
 import { UINameEnum } from "../../core/ui/UINameEnum";
+import { BundleName } from "../../core/loader/LoaderConst";
 
 export default class LoadingManager extends ModuleBase {
     private smallLoadingUIInfo : UIInfoStruct
@@ -16,19 +17,21 @@ export default class LoadingManager extends ModuleBase {
 
         this.loadingUIInfo = {
             name : UINameEnum.Loading,
+            bundleName : BundleName.LocalRes,
             layer : UILayer.Load,
             forbidShowSmallLoading : true,
         } as UIInfoStruct;
 
         this.smallLoadingUIInfo = {
             name : UINameEnum.SmallLoading,
+            bundleName : BundleName.LocalRes,
             layer : UILayer.Load,
             forbidShowSmallLoading : true,
             showMask : true,
         } as UIInfoStruct;
 
         this.registerUIInfo(this.loadingUIInfo, this.open, this.close);
-        this.registerUIInfo(this.smallLoadingUIInfo, this.openSmallLoading, this.close);
+        this.registerUIInfo(this.smallLoadingUIInfo, this.openSmallLoading, this.closeSmallLoading);
     };
 
     //type : 0 不显示全屏界面 type : 3 显示全屏背景

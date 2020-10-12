@@ -1,6 +1,6 @@
 import QueueExternalLoader from "../core/loader/QueueExternalLoader";
 import QueueLoader from "../core/loader/QueueLoader";
-import QueueLoaderBase from "../core/loader/QueueLoaderBase";
+import { BundleName } from "../core/loader/LoaderConst";
 
 const { ccclass, property, menu } = cc._decorator;
 
@@ -20,9 +20,8 @@ export default class IconLoader extends cc.Component {
     editorUrl: string = "这里填图片路径";
 
     @property
-    isExternal: boolean = false;  //是否外部加载(通过cc.loader.load)
+    isExternal: boolean = false;  //是否外部加载
 
-    loader : QueueLoaderBase;
     type : string | typeof cc.Asset;
     tick: number;
 
@@ -30,23 +29,8 @@ export default class IconLoader extends cc.Component {
         if (this.isLoadFromEditor) this.setIcon(this.editorUrl);
     }
 
-    setLoader() {
-        if(this.loader != null)return;
-        
-        if(this.isExternal) {
-            this.loader = QueueExternalLoader.Instance;
-            this.type = ``;
-        }
-        else {
-            this.loader = QueueLoader.Instance;
-            this.type = cc.Texture2D;
-        }
-    }
-
     setIcon(url: string, callback?: Function) {
         if (this.url == url) return;
-        
-        this.setLoader();
 
         if (!this._sprite) {
             this._sprite = this.node.getOrAddComponent(cc.Sprite);
@@ -58,28 +42,40 @@ export default class IconLoader extends cc.Component {
 
     loadAsset(url: string, callback: Function) {
         this.url = url;
-        this.tick = this.loader.load(url, this.type, (texture : cc.Texture2D) => {
+
+        let loadCompleteCb = (texture) => {
             if (cc.isValid(this._sprite) && texture) {
                 texture.packable = this.isPackable;
                 this._sprite.spriteFrame = new cc.SpriteFrame(texture);
                 callback && callback();
             }
-        });
+        };
+
+        if(this.isExternal) {
+            this.tick = QueueExternalLoader.Instance.load(url, this.type, (texture : cc.Texture2D) => {
+                loadCompleteCb(texture);
+            });
+        }
+        else {
+            this.tick = QueueLoader.Instance.load(url, BundleName.RemoteRes, this.type, (texture : cc.Texture2D) => {
+                loadCompleteCb(texture);
+            });
+        }
     }
 
-    private clear(force : boolean = false) {
+    private clear() {
         if (this.url != null) {
-            this.loader.unload(this.tick, force);
+            this.isExternal ? QueueExternalLoader.Instance.unload(this.tick) : QueueLoader.Instance.unload(this.tick);
             this.tick = null;
             this.url = null;
         }
     }
 
-    recycle(force : boolean = false) {
+    recycle() {
         if (!this._sprite) return;
 
         this._sprite.spriteFrame = null;
-        this.clear(force);
+        this.clear();
     }
 
     onDestroy() {

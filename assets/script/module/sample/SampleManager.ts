@@ -3,6 +3,7 @@ import UIManager, { UIInfoStruct } from "../../core/ui/UIManager";
 import SampleModel from "./model/SampleModel";
 import { UINameEnum } from "../../core/ui/UINameEnum";
 import { UILayer } from "../../core/ui/UILayer";
+import { BundleName } from "../../core/loader/LoaderConst";
 
 export default class SampleManager extends ModuleBase {
     private sampleActivity1UIInfo : UIInfoStruct;
@@ -15,18 +16,21 @@ export default class SampleManager extends ModuleBase {
 
         this.sampleActivity1UIInfo = {
             name: UINameEnum.SampleActivity1,
+            bundleName : BundleName.LocalRes,
             layer: UILayer.Activity,
             showMask : true,
         } as UIInfoStruct;
 
         this.sampleActivity2UIInfo = {
             name: UINameEnum.SampleActivity2,
+            bundleName : BundleName.LocalRes,
             layer: UILayer.Activity,
             showMask : true,
         } as UIInfoStruct;
 
         this.sampleActivity3UIInfo = {
             name: UINameEnum.SampleActivity3,
+            bundleName : BundleName.RemoteRes,
             layer: UILayer.Activity,
             showMask : true,
         } as UIInfoStruct;

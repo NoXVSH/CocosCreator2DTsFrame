@@ -1,4 +1,5 @@
 import LoaderManager from "../core/loader/LoaderManager";
+import { BundleName } from "../core/loader/LoaderConst";
 
 const { ccclass, property } = cc._decorator;
 
@@ -13,6 +14,7 @@ export default class ShaderEffectBase extends cc.Component {
     forceCancel: boolean;
 
     materialUrl: string = null;
+    bundleName : BundleName = BundleName.RemoteRes;
     usingMaterial: cc.Material;
     startTime: number;
 
@@ -34,7 +36,7 @@ export default class ShaderEffectBase extends cc.Component {
 
         this.forceCancel = false;
         this.isSet = true;
-        LoaderManager.Instance.load(this.materialUrl, cc.Material, (material: cc.Material) => {
+        LoaderManager.Instance.load(this.materialUrl, this.bundleName, cc.Material, (material: cc.Material) => {
             if (this.forceCancel) return;
             this.__setShader(material);
         });

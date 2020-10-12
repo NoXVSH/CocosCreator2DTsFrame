@@ -1,4 +1,3 @@
-import LoaderExternalManager from "./LoaderExternalManager";
 import LoaderManager from "./LoaderManager";
 import PlatformManager from "../../platform/PlatformManager";
 import UIManager from "../ui/UIManager";
@@ -14,10 +13,9 @@ export default class ResClearManager {
         return this._instance;
     }
 
-    clearRes(isForce : boolean = false, isGc : boolean = false) {
+    clearRes(isGc : boolean = false) {
         UIManager.Instance.clearUnuseUI();
-        LoaderExternalManager.Instance.clear(isForce);
-        LoaderManager.Instance.clear(isForce);
+        LoaderManager.Instance.clear();
         isGc && PlatformManager.Instance.garbageCollect();
     }
 

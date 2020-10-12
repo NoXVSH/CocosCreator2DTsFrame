@@ -1,6 +1,6 @@
-import LoaderManagerBase, { LoaderStruct } from "./LoaderManagerBase";
+import LoaderBase, { LoaderStruct } from "./LoaderBase";
 
-export default class LoaderExternalManager extends LoaderManagerBase {
+export default class LoaderExternalManager extends LoaderBase {
     private static _instance: LoaderExternalManager;
 
     static get Instance(): LoaderExternalManager {
@@ -10,19 +10,13 @@ export default class LoaderExternalManager extends LoaderManagerBase {
 
         return this._instance;
     }
-
     
     protected name : string = "LoaderExternalManager";
 
     protected __engineLoad(info: LoaderStruct) {
-        cc.loader.load(info.type ? { url: info.url, type: info.type as string } : info.url, (error: any, resource) => {
+        cc.assetManager.loadRemote(info.url, (error, resource) => {
             this.__loadResultHandler(info, error, resource);
         });
-    }
-
-    protected addReference(info : LoaderStruct): void {
-        if (info.depends == null) info.depends = [info.url];
-        this.__addReference(info.depends);
     }
 
 }

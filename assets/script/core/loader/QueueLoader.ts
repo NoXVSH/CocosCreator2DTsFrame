@@ -1,5 +1,6 @@
 import LoaderManager from "./LoaderManager";
-import QueueLoaderBase from "./QueueLoaderBase";
+import QueueLoaderBase, { QueueLoaderItem } from "./QueueLoaderBase";
+import { BundleName } from "./LoaderConst";
 
 export default class QueueLoader extends QueueLoaderBase {
     private static _instance: QueueLoader;
@@ -12,11 +13,26 @@ export default class QueueLoader extends QueueLoaderBase {
         return this._instance;
     }
 
-    constructor() {
-        super();
-        this.queueLoader = LoaderManager.Instance;
+    load(url: string, bundleName: BundleName, type: string | typeof cc.Asset, callback: Function, errorback?: Function) {
+        let tick = this.tick++;
+
+        let queueItem: QueueLoaderItem = {
+            url: url, 
+            type: type, 
+            callback: callback, 
+            errorback: errorback, 
+            isLoading: false, 
+            timeOutTick: null, 
+            tick: tick,
+            bundleName : bundleName,
+            loader : LoaderManager.Instance.getBundleLoader(bundleName)
+        };
+
+        this.waitList.push(queueItem);
+        this.checkLoadList();
+
+        return tick;
     }
 }
-
 
 window.regVar("QueueLoader", QueueLoader);

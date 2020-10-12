@@ -7,12 +7,13 @@ import ModuleManager from "../../core/module/ModuleManager";
 import MyGlobal from "../../config/MyGlobal";
 import { ModuleName } from "../../core/module/ModuleName";
 import { UINameEnum } from "../../core/ui/UINameEnum";
+import { BundleName } from "../../core/loader/LoaderConst";
 let LoadWaitTime = 30000;
 let preLoadList = [
-    "internal/prefab/base/mask",
-    "internal/prefab/loading/smallloading",
-    "internal/prefab/tip/tip",
-    "internal/prefab/login/login"
+    "prefab/base/mask",
+    "prefab/loading/smallloading",
+    "prefab/tip/tip",
+    "prefab/login/login"
 ];
 
 export default class GamePreload {
@@ -52,14 +53,22 @@ export default class GamePreload {
         let progressCb = info.progress;
         let completeCb = info.complete;
 
-        this.loadConfigAsync().then(() => {
+        this.loadConfigAsync()
+        .then(() => {
             log("加载游戏配置表完成");
             EventManager.Instance.emit(EventType.ConfigLoadComplete);
             return this.loadResAsync(preLoadList, progressCb);
-        }).then(() => {
+        })
+        .then(() => {
+            log("预加载游戏资源完成");
+            log("开始加载远程资源assetbundle");
+            return LoaderManager.Instance.loadBundlePromise(BundleName.RemoteRes);
+        })
+        .then(() => {
             this.clearLoadTimeout();
             completeCb && completeCb();
-        }).catch((reason) => {
+        })
+        .catch((reason) => {
             errorlog("预加载出错了", reason);
         });
     }
@@ -89,7 +98,7 @@ export default class GamePreload {
                 if (list[i].indexOf("atlas") != -1) type = cc.SpriteAtlas; //图集特殊, 不传type, 加载会当成cc.texture2d
                 else type = null;
 
-                LoaderManager.Instance.silentLoad(list[i], type, () => {
+                LoaderManager.Instance.silentLoad(list[i], BundleName.LocalRes, type, () => {
                     _loaded++;
 
                     progressCb(_loaded, list.length);

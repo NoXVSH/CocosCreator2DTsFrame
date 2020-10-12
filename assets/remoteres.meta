@@ -1,0 +1,20 @@
+{
+  "ver": "1.1.2",
+  "uuid": "be324e53-39ed-45f1-be4c-772428fc69c6",
+  "isBundle": true,
+  "bundleName": "remoteres",
+  "priority": "7",
+  "compressionType": {
+    "web-mobile": "default"
+  },
+  "optimizeHotUpdate": {
+    "web-mobile": false
+  },
+  "inlineSpriteFrames": {
+    "web-mobile": true
+  },
+  "isRemoteBundle": {
+    "web-mobile": false
+  },
+  "subMetas": {}
+}

@@ -4,6 +4,7 @@ import { UILayer } from "../../core/ui/UILayer";
 import EventManager from "../../core/event/EventManager";
 import { EventType } from "../../core/event/EventType";
 import { UINameEnum } from "../../core/ui/UINameEnum";
+import { BundleName } from "../../core/loader/LoaderConst";
 
 export default class TipManager extends ModuleBase {
 
@@ -15,6 +16,7 @@ export default class TipManager extends ModuleBase {
 
         this.mainUIInfo = {
             name : UINameEnum.Tip,
+            bundleName : BundleName.LocalRes,
             layer : UILayer.Tip,
         } as UIInfoStruct;
 

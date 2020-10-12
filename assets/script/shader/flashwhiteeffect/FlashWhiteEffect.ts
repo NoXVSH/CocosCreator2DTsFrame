@@ -1,11 +1,13 @@
 import LoaderManager from "../../core/loader/LoaderManager";
 import ShaderEffectBase from "../ShaderEffectBase";
+import { BundleName } from "../../core/loader/LoaderConst";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class FlashWhiteEffect extends ShaderEffectBase {
-    materialUrl: string = "internal/material/flashwhiteeffectmaterial";
+    materialUrl: string = "material/flashwhiteeffectmaterial";
+    bundleName : BundleName = BundleName.RemoteRes;
 
     update(dt) {
         if (this.usingMaterial) {
