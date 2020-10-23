@@ -5,16 +5,20 @@
   "bundleName": "remoteres",
   "priority": "7",
   "compressionType": {
-    "web-mobile": "default"
+    "web-mobile": "default",
+    "android": "default"
   },
   "optimizeHotUpdate": {
-    "web-mobile": false
+    "web-mobile": false,
+    "android": true
   },
   "inlineSpriteFrames": {
-    "web-mobile": true
+    "web-mobile": true,
+    "android": true
   },
   "isRemoteBundle": {
-    "web-mobile": false
+    "web-mobile": false,
+    "android": false
   },
   "subMetas": {}
 }

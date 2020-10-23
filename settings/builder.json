@@ -50,13 +50,25 @@
   "xxteaKey": "996d0505-7542-42",
   "zipCompressJs": true,
   "android": {
+    "REMOTE_SERVER_ROOT": "",
     "packageName": "org.cocos2d.idiomtown"
   },
   "ios": {
+    "REMOTE_SERVER_ROOT": "",
     "packageName": "org.cocos2d.idiomtown"
   },
   "mac": {
-    "packageName": "org.cocos2d.idiomtown"
+    "REMOTE_SERVER_ROOT": "",
+    "height": 720,
+    "packageName": "org.cocos2d.idiomtown",
+    "width": 1280
   },
-  "win32": {}
+  "win32": {
+    "REMOTE_SERVER_ROOT": "",
+    "height": 720,
+    "width": 1280
+  },
+  "mainCompressionType": "default",
+  "mainIsRemote": false,
+  "nativeMd5Cache": true
 }
